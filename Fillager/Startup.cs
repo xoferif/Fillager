@@ -53,7 +53,7 @@ namespace Fillager
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Fillager}/{action=Index}/{id?}");
             });
         }
     }
