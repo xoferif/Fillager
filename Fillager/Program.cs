@@ -19,6 +19,7 @@ namespace Fillager
                 .UseApplicationInsights()
                 .Build();
 
+
             host.Run();
         }
     }

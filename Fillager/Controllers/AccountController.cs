@@ -20,9 +20,9 @@ namespace Fillager.Controllers
            SignInManager<IdentityUser> loginManager,
            RoleManager<IdentityRole> roleManager)
         {
-            this._userManager = userManager;
-            this._loginManager = loginManager;
-            this._roleManager = roleManager;
+            _userManager = userManager;
+            _loginManager = loginManager;
+            _roleManager = roleManager;
         }
 
         #region registration
@@ -36,37 +36,40 @@ namespace Fillager.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Register(RegisterViewModel obj)
         {
-            if (ModelState.IsValid)
-            {
-                IdentityUser user = new IdentityUser();
-                user.UserName = obj.UserName;
-                user.Email = obj.Email;
+            if (!ModelState.IsValid) return View("RegistrationView", obj);
+
+            var user = new IdentityUser();
+            user.UserName = obj.UserName;
+            user.Email = obj.Email;
                 
-                IdentityResult result = _userManager.CreateAsync
+            var result = _userManager.CreateAsync
                 (user, obj.Password).Result;
 
-                if (result.Succeeded)
-                {
-                    if (!_roleManager.RoleExistsAsync("NormalUser").Result)
-                    {
-                        IdentityRole role = new IdentityRole();
-                        role.Name = "NormalUser";
-                        IdentityResult roleResult = _roleManager.
-                        CreateAsync(role).Result;
-                        if (!roleResult.Succeeded)
-                        {
-                            ModelState.AddModelError("",
-                             "Error while creating role!");
-                            return View("RegistrationView",obj);
-                        }
-                    }
+            
+            if (!result.Succeeded)
+            {
+                obj.Errors = result.Errors.ToList();
+                return View("RegistrationView", obj);
+            }
 
-                    _userManager.AddToRoleAsync(user,
-                                 "NormalUser").Wait();
-                    return RedirectToAction("Login", "Account");
+            if (!_roleManager.RoleExistsAsync("NormalUser").Result)
+            {
+                var role = new IdentityRole();
+                role.Name = "NormalUser";
+
+                var roleResult = _roleManager.
+                    CreateAsync(role).Result;
+                if (!roleResult.Succeeded)
+                {
+                    ModelState.AddModelError("",
+                        "Error while creating role!");
+                    return View("RegistrationView",obj);
                 }
             }
-            return View("RegistrationView",obj);
+
+            _userManager.AddToRoleAsync(user,
+                "NormalUser").Wait();
+            return RedirectToAction("Login", "Account");
         }
 
         #endregion
@@ -89,7 +92,7 @@ namespace Fillager.Controllers
 
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Fillager");
                 }
 
                 ModelState.AddModelError("", "Invalid login!");

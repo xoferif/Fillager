@@ -30,7 +30,14 @@ namespace Fillager
             services.AddDbContext<MyIdentityDbContext>(options =>
                 options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<IdentityUser, IdentityRole>(identityOptions =>
+                {
+                    identityOptions.Password.RequiredLength = 8;
+                    identityOptions.Password.RequireUppercase = true;
+                    identityOptions.Password.RequireLowercase = true;
+                    identityOptions.Password.RequireNonAlphanumeric = true;
+                    identityOptions.Password.RequireDigit = true;
+                })
                 .AddEntityFrameworkStores<MyIdentityDbContext>()
                 .AddDefaultTokenProviders();
 
