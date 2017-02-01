@@ -6,7 +6,7 @@
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
-            <label asp-for="UserName" class="col-md-2 control-label"></label>
+            <label asp-for="UserName" class="col-md-2 control-label">Username:</label>
             <div class="col-md-10">
                 <input asp-for="UserName" class="form-control" />
                 <span asp-validation-for="UserName" class="text-danger"></span>
@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="ConfirmPassword" class="col-md-2 control-label"></label>
+            <label asp-for="ConfirmPassword" class="col-md-2 control-label">Confirm Password:</label>
             <div class="col-md-10">
                 <input asp-for="ConfirmPassword" class="form-control" />
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
@@ -31,20 +31,6 @@
             <div class="col-md-10">
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="FullName" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="FullName" class="form-control" />
-                <span asp-validation-for="FullName" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="BirthDate" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="BirthDate" class="form-control" />
-                <span asp-validation-for="BirthDate" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
