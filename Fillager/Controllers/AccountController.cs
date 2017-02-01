@@ -74,7 +74,7 @@ namespace Fillager.Controllers
         #region login / logoff
         public IActionResult Login()
         {
-            return View();
+            return View("LoginView");
         }
 
         [HttpPost]

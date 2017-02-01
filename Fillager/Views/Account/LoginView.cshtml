@@ -1,10 +1,14 @@
 @model Fillager.ViewModels.LoginViewModel
-
-<form asp-action="Login" asp-controller="Account">
+@{
+  ViewData["Title"] = "Login";
+}
+<form asp-action="LoginView" asp-controller="Account">
     <div class="form-horizontal">
-        <h4>LoginViewModel</h4>
+        <h4>Sign in with your username and password.</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <p>Dont' have a login? register <a href="Register">here</a></p>
+
         <div class="form-group">
             <label asp-for="UserName" class="col-md-2 control-label"></label>
             <div class="col-md-10">

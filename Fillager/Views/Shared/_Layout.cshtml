@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Fillager</title>
+    <title>@ViewData["Title"] - NetDisk</title>
 
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -27,14 +27,16 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Fillager" asp-action="Index" class="navbar-brand">Fillager</a>
+                <a asp-area="" asp-controller="Fillager" asp-action="Index" class="navbar-brand">NetDisk</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Fillager" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Fillager" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Fillager" asp-action="Contact">Contact</a></li>
+                    <li><a asp-area="" asp-controller="Account" asp-action="Login">Login</a></li>
                 </ul>
             </div>
         </div>
@@ -43,7 +45,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2017 - WebApplication1</p>
+            <p>&copy; 2017 - NetDisk Fillager</p>
         </footer>
     </div>
 
