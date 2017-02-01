@@ -53,7 +53,15 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2017 - NetDisk Fillager</p>
+            <table style="width:100%">
+                <tr>
+                    <th><a asp-area="" asp-controller="Fillager" asp-action="About">About</a></th>
+                    <th><a asp-area="" asp-controller="Fillager" asp-action="Contact">Contact</a></th>
+                    <th style="text-align: right"><p>&copy; 2017 - NetDisk Fillager</p></th>
+                </tr>
+            </table>
+                    
+            
         </footer>
     </div>
 
