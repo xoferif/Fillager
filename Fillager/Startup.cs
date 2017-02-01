@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fillager.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -28,6 +31,14 @@ namespace Fillager
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
+            services.AddDbContext<MyIdentityDbContext>(options =>
+        options.UseSqlServer(Configuration.GetConnectionString
+        ("DefaultConnection")));
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<MyIdentityDbContext>()
+                .AddDefaultTokenProviders();
+
+
             services.AddMvc();
         }
 
@@ -48,7 +59,7 @@ namespace Fillager
             }
 
             app.UseStaticFiles();
-
+            app.UseIdentity();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
