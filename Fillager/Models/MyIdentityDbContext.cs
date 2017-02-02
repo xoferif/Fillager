@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Fillager.Models
 {
-    public class MyIdentityDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
+    public class MyIdentityDbContext : IdentityDbContext<UserIdentity, UserRole, string>
     {
         public MyIdentityDbContext(DbContextOptions<MyIdentityDbContext> options)
         : base(options)

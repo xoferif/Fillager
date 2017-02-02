@@ -30,7 +30,7 @@ namespace Fillager
             services.AddDbContext<MyIdentityDbContext>(options =>
                 options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<UserIdentity, IdentityRole>(identityOptions =>
+            services.AddIdentity<UserIdentity, UserRole>(identityOptions =>
                 {
                     identityOptions.Password.RequiredLength = 8;
                     identityOptions.Password.RequireUppercase = true;

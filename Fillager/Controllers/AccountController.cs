@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Fillager.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -10,14 +11,14 @@ namespace Fillager.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _loginManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<UserIdentity> _userManager;
+        private readonly SignInManager<UserIdentity> _loginManager;
+        private readonly RoleManager<UserRole> _roleManager;
 
 
-        public AccountController(UserManager<IdentityUser> userManager,
-           SignInManager<IdentityUser> loginManager,
-           RoleManager<IdentityRole> roleManager)
+        public AccountController(UserManager<UserIdentity> userManager,
+           SignInManager<UserIdentity> loginManager,
+           RoleManager<UserRole> roleManager)
         {
             _userManager = userManager;
             _loginManager = loginManager;
@@ -37,7 +38,7 @@ namespace Fillager.Controllers
         {
             if (!ModelState.IsValid) return View("RegistrationView", obj);
 
-            var user = new IdentityUser();
+            var user = new UserIdentity();
             user.UserName = obj.UserName;
             user.Email = obj.Email;
                 
@@ -54,7 +55,7 @@ namespace Fillager.Controllers
 
             if (!_roleManager.RoleExistsAsync("NormalUser").Result)
             {
-                var role = new IdentityRole();
+                var role = new UserRole();
                 role.Name = "NormalUser";
 
                 var roleResult = _roleManager.
@@ -69,20 +70,18 @@ namespace Fillager.Controllers
 
             _userManager.AddToRoleAsync(user,
                 "NormalUser").Wait();
-            return RedirectToAction("Login", "Account");
+
+            //Registered!
+
+            return RedirectToAction("Index", "Fillager");
         }
 
         #endregion
 
         #region login / logoff
-        public IActionResult Login()
-        {
-            return View("LoginView");
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult LoginAsync(LoginViewModel obj)
+        public IActionResult Login(LoginViewModel obj)
         {
             if (ModelState.IsValid)
             {

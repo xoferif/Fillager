@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fillager.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -30,9 +31,9 @@ namespace Fillager.Controllers
       return View();
     }
 
-    private readonly UserManager<IdentityUser> userManager;
+    private readonly UserManager<UserIdentity> userManager;
 
-    public FillagerController(UserManager<IdentityUser>
+    public FillagerController(UserManager<UserIdentity>
                           userManager)
     {
       this.userManager = userManager;
@@ -42,7 +43,7 @@ namespace Fillager.Controllers
     [Authorize]
     public IActionResult LoginIndex()
     {
-      IdentityUser user = userManager.GetUserAsync
+      var user = userManager.GetUserAsync
                            (HttpContext.User).Result;
 
       ViewBag.Message = $"Welcome {user.UserName}!";

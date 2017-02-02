@@ -8,9 +8,10 @@ using Fillager.Models;
 namespace Fillager.Migrations
 {
     [DbContext(typeof(MyIdentityDbContext))]
-    partial class MyIdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170202101315_UpdatedIdentityAndRole")]
+    partial class UpdatedIdentityAndRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.0-rtm-22752");

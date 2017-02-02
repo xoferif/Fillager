@@ -1,8 +1,9 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿@using Fillager.Models
+@using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Identity.EntityFrameworkCore
 
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<UserIdentity> SignInManager
+@inject UserManager<UserIdentity> UserManager
 
 @if (SignInManager.IsSignedIn(User))
 {
@@ -17,7 +18,7 @@ else
         <li class="dropdown">
             <a class="dropdown-toggle" href="#" data-toggle="dropdown">Sign In <strong class="caret"></strong></a>
             <div class="dropdown-menu col-xs-12" style="padding: 15px; padding-bottom: 0; min-width: 250px">
-                @Html.Partial("~/Views/Account/LoginView.cshtml")
+                @await Html.PartialAsync("~/Views/Account/LoginView.cshtml")
             </div>
         </li>
     </ul>
