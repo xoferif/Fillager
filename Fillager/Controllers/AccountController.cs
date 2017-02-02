@@ -1,9 +1,7 @@
 using System.Linq;
-using System.Threading.Tasks;
 using Fillager.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Fillager.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 
@@ -29,6 +27,7 @@ namespace Fillager.Controllers
 
         public IActionResult Register()
         {
+            
             return View("RegistrationView");
         }
 
@@ -72,6 +71,8 @@ namespace Fillager.Controllers
                 "NormalUser").Wait();
 
             //Registered!
+            
+            //this.AddToastMessage("Success", $"Your account: {obj.UserName} has been registered", ToastType.Success);
 
             return RedirectToAction("Index", "Fillager");
         }
