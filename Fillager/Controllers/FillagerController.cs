@@ -25,6 +25,10 @@ namespace Fillager.Controllers
     {
       return View();
     }
+    public IActionResult TransferWindow()
+    {
+      return View();
+    }
 
     private readonly UserManager<IdentityUser> userManager;
 
