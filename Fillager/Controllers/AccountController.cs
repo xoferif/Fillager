@@ -1,8 +1,10 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Fillager.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Fillager.Controllers
 {
@@ -46,6 +48,7 @@ namespace Fillager.Controllers
             if (!result.Succeeded)
             {
                 obj.Errors = result.Errors.ToList();
+                //todo use ModelState.AddModelError(); instead?
                 return View("RegistrationView", obj);
             }
 
@@ -79,7 +82,7 @@ namespace Fillager.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(LoginViewModel obj)
+        public IActionResult LoginAsync(LoginViewModel obj)
         {
             if (ModelState.IsValid)
             {
@@ -94,17 +97,15 @@ namespace Fillager.Controllers
 
                 ModelState.AddModelError("", "Invalid login!");
             }
-
             return View("LoginView",obj);
         }
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [Authorize]
         public IActionResult LogOff()
         {
             _loginManager.SignOutAsync().Wait();
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Index", "Fillager");
         }
 
         #endregion

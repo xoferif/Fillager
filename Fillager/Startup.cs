@@ -30,7 +30,7 @@ namespace Fillager
             services.AddDbContext<MyIdentityDbContext>(options =>
                 options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<IdentityUser, IdentityRole>(identityOptions =>
+            services.AddIdentity<UserIdentity, IdentityRole>(identityOptions =>
                 {
                     identityOptions.Password.RequiredLength = 8;
                     identityOptions.Password.RequireUppercase = true;
@@ -40,7 +40,10 @@ namespace Fillager
                 })
                 .AddEntityFrameworkStores<MyIdentityDbContext>()
                 .AddDefaultTokenProviders();
-
+            services.AddAuthorization(authorizationOptions =>
+            {
+                authorizationOptions.AddPolicy("ElevatedRights", policy => policy.RequireRole("Admin"));
+            });
 
             services.AddMvc();
         }
@@ -55,6 +58,7 @@ namespace Fillager
             {
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
+                
             }
             else
             {
