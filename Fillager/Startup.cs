@@ -1,8 +1,10 @@
 ﻿using Fillager.Models;
+using Fillager.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using MySQL.Data.Entity.Extensions;
 
@@ -45,6 +47,10 @@ namespace Fillager
             });
 
             services.AddMvc();
+
+            //Filelager services
+            services.AddTransient<IMinioService, MinioService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -4,3 +4,12 @@
 
 <h2>Transfer window... to be become our upload / download tab</h2>
 
+<div>
+    <form asp-action="UploadFiles"
+          asp-controller="Fillager"
+          method="post"
+          enctype="multipart/form-data">
+        <input type="file" name="files" multiple />
+        <input type="submit" value="Upload Selected Files" />
+    </form>
+</div>
