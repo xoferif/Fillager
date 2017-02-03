@@ -15,7 +15,7 @@ namespace Fillager.Services
 {
     public class MinioService : IMinioService
     {
-        private const string MinioUrl = "http://minio:9000/"; //= "http://192.168.1.20:9000/";
+        private const string MinioUrl = "http://minio:9000"; //= "http://192.168.1.20:9000/";
         private const string AccessKey = "6b4535c9d0545e036d5b";
         private const string SecretAccessKey = "f50a73124f5699570beb9ad44cd941";
 
@@ -24,7 +24,7 @@ namespace Fillager.Services
         //downloadFile(string bucketName);
         public async void UploadFile(string bucketName, Stream fileStream)
         {
-            var client = getClient();
+            var client = GetClient();
 
             var listBucketsResponse = await client.ListBucketsAsync();
             var bucketExist = await AmazonS3Util.DoesS3BucketExistAsync(client, bucketName);
@@ -34,43 +34,38 @@ namespace Fillager.Services
             {
                 await client.PutBucketAsync(bucketName);
             }
-            //var fileId = Guid.NewGuid().ToString();
-            var fileId = "test";
+            var fileId = Guid.NewGuid().ToString();
+            //var fileId = "test";
 
             var objectBucket = listBucketsResponse.Buckets.FirstOrDefault(bckt => bckt.BucketName.Equals(bucketName));
-
-            await getClient().PutObjectAsync(new PutObjectRequest()
+            if (objectBucket != null)
             {
-                BucketName = objectBucket.BucketName,
-                Key = fileId,
-                InputStream = fileStream
-            });
-
-            await client.PutObjectAsync(
-                new PutObjectRequest()
+                await GetClient().PutObjectAsync(new PutObjectRequest()
                 {
-                    BucketName = bucketName,
+                    BucketName = objectBucket.BucketName,
                     Key = fileId,
                     InputStream = fileStream
                 });
+            }
         }
 
         public Stream DownloadFile(string bucketName, string fileGuid)
         {
-            var client = getClient();
+            var client = GetClient();
             var obj = client.GetObjectAsync(bucketName, fileGuid).Result;
             return obj.ResponseStream;
         }
 
 
-        private static AmazonS3Client getClient()
+        private static AmazonS3Client GetClient()
         {
             AWSCredentials creds = new BasicAWSCredentials(AccessKey, SecretAccessKey);
            
             var config = new AmazonS3Config()
             {
                 RegionEndpoint = RegionEndpoint.EUWest1,
-                SignatureVersion = "AWSS3V4SignerType",
+                SignatureVersion = "v4",
+                ForcePathStyle = true,//required for minio
                 ServiceURL = MinioUrl
             };
 
