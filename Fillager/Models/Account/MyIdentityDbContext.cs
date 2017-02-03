@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Fillager.Models
+namespace Fillager.Models.Account
 {
     public class MyIdentityDbContext : IdentityDbContext<UserIdentity, UserRole, string>
     {

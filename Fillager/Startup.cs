@@ -1,4 +1,5 @@
 ﻿using Fillager.Models;
+using Fillager.Models.Account;
 using Fillager.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

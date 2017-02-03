@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace Fillager.Models
+namespace Fillager.Models.Account
 {
     public class UserIdentity : IdentityUser
     {

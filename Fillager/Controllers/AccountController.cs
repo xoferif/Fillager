@@ -1,5 +1,6 @@
 using System.Linq;
 using Fillager.Models;
+using Fillager.Models.Account;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Fillager.ViewModels;
