@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Amazon;
 using Amazon.Runtime;
@@ -19,34 +20,38 @@ namespace Fillager.Services
         private const string AccessKey = "6b4535c9d0545e036d5b";
         private const string SecretAccessKey = "f50a73124f5699570beb9ad44cd941";
 
-
-        //uploadFile(string bucketName, stream file);
-        //downloadFile(string bucketName);
-        public async void UploadFile(string bucketName, Stream fileStream)
+        /// <summary>
+        /// Uploads a stream to minio
+        /// </summary>
+        /// <param name="bucketName">the bucket under which to save the datastream</param>
+        /// <param name="dataStream">the object to save</param>
+        /// <returns>the minio id on which the item can be retrieved</returns>
+        public async Task<string> UploadFile(string bucketName, Stream dataStream)
         {
             var client = GetClient();
 
-            var listBucketsResponse = await client.ListBucketsAsync();
             var bucketExist = await AmazonS3Util.DoesS3BucketExistAsync(client, bucketName);
 
 
-            if (! listBucketsResponse.Buckets.Any(bucket => bucket.BucketName.Equals(bucketName)))
+            if (!bucketExist)
             {
                 await client.PutBucketAsync(bucketName);
             }
             var fileId = Guid.NewGuid().ToString();
-            //var fileId = "test";
-
-            var objectBucket = listBucketsResponse.Buckets.FirstOrDefault(bckt => bckt.BucketName.Equals(bucketName));
-            if (objectBucket != null)
+            
+            var putResult = await GetClient().PutObjectAsync(new PutObjectRequest()
             {
-                await GetClient().PutObjectAsync(new PutObjectRequest()
-                {
-                    BucketName = objectBucket.BucketName,
-                    Key = fileId,
-                    InputStream = fileStream
-                });
-            }
+                BucketName = bucketName,
+                Key = fileId,
+                InputStream = dataStream
+            });
+
+            var code = putResult.HttpStatusCode;
+
+            if (code == HttpStatusCode.OK)
+                return fileId;
+
+            throw new AmazonS3Exception("Upload Error");
         }
 
         public Stream DownloadFile(string bucketName, string fileGuid)
