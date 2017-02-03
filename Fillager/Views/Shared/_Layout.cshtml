@@ -18,8 +18,9 @@
     </environment>
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
-<body
-@Html.Partial("Navbar")
+<body>
+    @Html.Partial("Navbar")
+
 <div class="container body-content">
     @RenderBody()
     <hr/>

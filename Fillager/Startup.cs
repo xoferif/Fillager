@@ -30,7 +30,9 @@ namespace Fillager
         {
             // Add framework services.
             services.AddDbContext<MyIdentityDbContext>(options =>
-                options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
+            {
+                options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"));
+            });
 
             services.AddIdentity<UserIdentity, UserRole>(identityOptions =>
                 {

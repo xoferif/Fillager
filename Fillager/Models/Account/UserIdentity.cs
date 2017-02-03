@@ -8,14 +8,9 @@ namespace Fillager.Models.Account
         public long EarnedExtraStorage { get; [Authorize] set; }
         public long PayedExtraStorage { get; [Authorize(Roles = "Admin, PayingUser")] set; } = 0;
 
-        public long OtherStorageBonus
-        {
-            get;
-            [Authorize(Policy = "ElevatedRights")]
-            set;
-        } = 0;
+        public long OtherStorageBonus { get; [Authorize(Policy = "ElevatedRights")] set; } = 0;
 
-        public long StorageSpace => EarnedExtraStorage + PayedExtraStorage + OtherStorageBonus;
+        public long StorageSpace => EarnedExtraStorage + PayedExtraStorage + OtherStorageBonus; //todo add role specific storage
 
         public long StorageUsedIn { get; set; }
 

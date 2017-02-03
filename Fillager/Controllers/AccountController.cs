@@ -1,5 +1,4 @@
 using System.Linq;
-using Fillager.Models;
 using Fillager.Models.Account;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
@@ -38,10 +37,12 @@ namespace Fillager.Controllers
         {
             if (!ModelState.IsValid) return View("RegistrationView", obj);
 
-            var user = new UserIdentity();
-            user.UserName = obj.UserName;
-            user.Email = obj.Email;
-                
+            var user = new UserIdentity
+            {
+                UserName = obj.UserName,
+                Email = obj.Email
+            };
+
             var result = _userManager.CreateAsync
                 (user, obj.Password).Result;
 

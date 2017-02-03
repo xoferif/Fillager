@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Fillager.Models.Account
@@ -8,7 +9,15 @@ namespace Fillager.Models.Account
         public MyIdentityDbContext(DbContextOptions<MyIdentityDbContext> options)
         : base(options)
         {
-            //intentionaly left blank
+            try
+            {
+                //auto-migrate this db, should be disabled in production
+                Database.Migrate();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

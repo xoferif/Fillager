@@ -16,7 +16,7 @@ namespace Fillager.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.0-rtm-22752");
 
-            modelBuilder.Entity("Fillager.Models.UserIdentity", b =>
+            modelBuilder.Entity("Fillager.Models.Account.UserIdentity", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
@@ -74,7 +74,7 @@ namespace Fillager.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("Fillager.Models.UserRole", b =>
+            modelBuilder.Entity("Fillager.Models.Account.UserRole", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
@@ -185,7 +185,7 @@ namespace Fillager.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Fillager.Models.UserRole")
+                    b.HasOne("Fillager.Models.Account.UserRole")
                         .WithMany("Claims")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -193,7 +193,7 @@ namespace Fillager.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Fillager.Models.UserIdentity")
+                    b.HasOne("Fillager.Models.Account.UserIdentity")
                         .WithMany("Claims")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -201,7 +201,7 @@ namespace Fillager.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Fillager.Models.UserIdentity")
+                    b.HasOne("Fillager.Models.Account.UserIdentity")
                         .WithMany("Logins")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -209,12 +209,12 @@ namespace Fillager.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("Fillager.Models.UserRole")
+                    b.HasOne("Fillager.Models.Account.UserRole")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Fillager.Models.UserIdentity")
+                    b.HasOne("Fillager.Models.Account.UserIdentity")
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
