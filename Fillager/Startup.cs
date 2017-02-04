@@ -1,11 +1,10 @@
-﻿using Fillager.Models;
+﻿using Fillager.DataAccessLayer;
 using Fillager.Models.Account;
 using Fillager.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using MySQL.Data.Entity.Extensions;
 
@@ -29,7 +28,7 @@ namespace Fillager
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddDbContext<MyIdentityDbContext>(options =>
+            services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"));
             });
@@ -42,7 +41,7 @@ namespace Fillager
                     identityOptions.Password.RequireNonAlphanumeric = true;
                     identityOptions.Password.RequireDigit = true;
                 })
-                .AddEntityFrameworkStores<MyIdentityDbContext>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
             services.AddAuthorization(authorizationOptions =>
             {

@@ -1,17 +1,69 @@
+@model Fillager.ViewModels.TransferWindowViewModel
 @{
     ViewData["Title"] = "Home";
+    var privateFiles = Model.PrivateFiles;
+    var publicFiles = Model.PublicFiles;
+
+
 }
 
-<h2>Transfer window... to be become our upload / download tab</h2>
 
-<div>
-    <form asp-action="UploadFiles"
-          asp-controller="Fillager"
-          method="post"
-          enctype="multipart/form-data">
-        <input type="file" name="files" multiple />
-        <input type="submit" value="Upload Selected Files" />
-    </form>
-    
-    <a asp-controller="Fillager" asp-action="DownloadFile" asp-route-id="test">download</a>
+<div class="page-header">
+    <div class="panel-group">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Upload Files</div>
+            <div class="panel-group">
+                <form asp-action="UploadFiles"
+                      asp-controller="Fillager"
+                      method="post"
+                      enctype="multipart/form-data">
+                    <input type="file" name="files" multiple/>
+                    <input type="submit" value="Upload Selected Files"/>
+                </form>
+            </div>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#privateFileList">Your Files</a>
+                </h4>
+            </div>
+            <div id="privateFileList" class="panel-collapse list-group collapse in">
+                @if (privateFiles.Any())
+                {
+                    foreach (var file in privateFiles)
+                    {
+                        <a class="list-group-item" asp-controller="Fillager" asp-action="DownloadFile" asp-route-id="@file.FileId">@file.FileName</a>
+                    }
+                }
+                else
+                {
+                    <p class="list-group-item">No files here yet</p>
+                }
+            </div>
+        </div>
+
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" href="#publicFileList">Public Files</a>
+                </h4>
+            </div>
+            <div id="publicFileList" class="panel-collapse list-group collapse in">
+                @if (publicFiles.Any())
+                {
+                    foreach (var file in publicFiles)
+                    {
+                        <a class="list-group-item" asp-controller="Fillager" asp-action="DownloadFile" asp-route-id="@file.FileId">@file.FileName</a>
+                    }
+                }
+                else
+                {
+                    <p class="list-group-item">No files here yet</p>
+                }
+            </div>
+        </div>
+    </div>
 </div>

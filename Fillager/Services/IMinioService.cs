@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 
 namespace Fillager.Services
@@ -12,7 +11,7 @@ namespace Fillager.Services
         /// <param name="bucketName">the bucket under which to save the datastream</param>
         /// <param name="dataStream">the object to save</param>
         /// <returns>the minio id on which the item can be retrieved</returns>
-        Task<string> UploadFile(string bucketName, Stream fileStream);
+        Task<string> UploadFile(string bucketName, Stream dataStream);
         Stream DownloadFile(string bucketName, string fileGuid);
     }
 }

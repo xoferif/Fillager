@@ -2,13 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
-using Fillager.Models;
-using Fillager.Models.Account;
+using Fillager.DataAccessLayer;
 
 namespace Fillager.Migrations
 {
-    [DbContext(typeof(MyIdentityDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     partial class MyIdentityDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -55,7 +53,7 @@ namespace Fillager.Migrations
 
                     b.Property<string>("SecurityStamp");
 
-                    b.Property<long>("StorageUsedIn");
+                    b.Property<long>("StorageUsed");
 
                     b.Property<bool>("TwoFactorEnabled");
 
@@ -97,6 +95,26 @@ namespace Fillager.Migrations
                         .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
+                });
+
+            modelBuilder.Entity("Fillager.Models.Files.File", b =>
+                {
+                    b.Property<string>("FileId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("FileName");
+
+                    b.Property<bool>("IsPublic");
+
+                    b.Property<string>("OwnerGuidId");
+
+                    b.Property<long>("Size");
+
+                    b.HasKey("FileId");
+
+                    b.HasIndex("OwnerGuidId");
+
+                    b.ToTable("File");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>
@@ -181,6 +199,13 @@ namespace Fillager.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("Fillager.Models.Files.File", b =>
+                {
+                    b.HasOne("Fillager.Models.Account.UserIdentity", "OwnerGuid")
+                        .WithMany("Files")
+                        .HasForeignKey("OwnerGuidId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>

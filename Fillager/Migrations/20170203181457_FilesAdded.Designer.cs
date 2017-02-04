@@ -8,22 +8,81 @@ using Fillager.DataAccessLayer;
 namespace Fillager.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170201111302_AuthenticationMigration")]
-    partial class AuthenticationMigration
+    [Migration("20170203181457_FilesAdded")]
+    partial class FilesAdded
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.1.0-rtm-22752")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "1.1.0-rtm-22752");
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole", b =>
+            modelBuilder.Entity("Fillager.Models.Account.UserIdentity", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AccessFailedCount");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
+
+                    b.Property<long>("EarnedExtraStorage");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("EmailConfirmed");
+
+                    b.Property<bool>("LockoutEnabled");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256);
+
+                    b.Property<long>("OtherStorageBonus");
+
+                    b.Property<string>("PasswordHash");
+
+                    b.Property<long>("PayedExtraStorage");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("SecurityStamp");
+
+                    b.Property<long>("StorageUsedIn");
+
+                    b.Property<bool>("TwoFactorEnabled");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasName("UserNameIndex");
+
+                    b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("Fillager.Models.Account.UserRole", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
+
+                    b.Property<long>("DefaultStorage");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256);
@@ -38,6 +97,26 @@ namespace Fillager.Migrations
                         .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
+                });
+
+            modelBuilder.Entity("Fillager.Models.Files.File", b =>
+                {
+                    b.Property<string>("FileId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("FileName");
+
+                    b.Property<bool>("IsPublic");
+
+                    b.Property<string>("OwnerGuidId");
+
+                    b.Property<long>("Size");
+
+                    b.HasKey("FileId");
+
+                    b.HasIndex("OwnerGuidId");
+
+                    b.ToTable("File");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>
@@ -57,56 +136,6 @@ namespace Fillager.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetRoleClaims");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("AccessFailedCount");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken();
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256);
-
-                    b.Property<bool>("EmailConfirmed");
-
-                    b.Property<bool>("LockoutEnabled");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("PasswordHash");
-
-                    b.Property<string>("PhoneNumber");
-
-                    b.Property<bool>("PhoneNumberConfirmed");
-
-                    b.Property<string>("SecurityStamp");
-
-                    b.Property<bool>("TwoFactorEnabled");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasName("UserNameIndex");
-
-                    b.ToTable("AspNetUsers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserClaim<string>", b =>
@@ -174,9 +203,16 @@ namespace Fillager.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Fillager.Models.Files.File", b =>
+                {
+                    b.HasOne("Fillager.Models.Account.UserIdentity", "OwnerGuid")
+                        .WithMany("Files")
+                        .HasForeignKey("OwnerGuidId");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole")
+                    b.HasOne("Fillager.Models.Account.UserRole")
                         .WithMany("Claims")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -184,7 +220,7 @@ namespace Fillager.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUser")
+                    b.HasOne("Fillager.Models.Account.UserIdentity")
                         .WithMany("Claims")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -192,7 +228,7 @@ namespace Fillager.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUser")
+                    b.HasOne("Fillager.Models.Account.UserIdentity")
                         .WithMany("Logins")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -200,12 +236,12 @@ namespace Fillager.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole")
+                    b.HasOne("Fillager.Models.Account.UserRole")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUser")
+                    b.HasOne("Fillager.Models.Account.UserIdentity")
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);

@@ -1,12 +1,14 @@
 ﻿using System;
+using Fillager.Models.Account;
+using Fillager.Models.Files;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Fillager.Models.Account
+namespace Fillager.DataAccessLayer
 {
-    public class MyIdentityDbContext : IdentityDbContext<UserIdentity, UserRole, string>
+    public class ApplicationDbContext : IdentityDbContext<UserIdentity, UserRole, string>
     {
-        public MyIdentityDbContext(DbContextOptions<MyIdentityDbContext> options)
+        public ApplicationDbContext(DbContextOptions options)
         : base(options)
         {
             try
@@ -19,5 +21,7 @@ namespace Fillager.Models.Account
                 Console.WriteLine(e);
             }
         }
+        public DbSet<File> Files { get; set; }
+
     }
 }

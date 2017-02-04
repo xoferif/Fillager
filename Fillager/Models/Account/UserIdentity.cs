@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Collections.Generic;
+using Fillager.Models.Files;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Fillager.Models.Account
@@ -12,7 +14,8 @@ namespace Fillager.Models.Account
 
         public long StorageSpace => EarnedExtraStorage + PayedExtraStorage + OtherStorageBonus; //todo add role specific storage
 
-        public long StorageUsedIn { get; set; }
-
+        public long StorageUsed { get; set; }
+        
+        public virtual ICollection<File> Files { get; set; }
     }
 }

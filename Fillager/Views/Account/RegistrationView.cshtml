@@ -4,60 +4,60 @@
 }
 
 
-
-<form asp-action="Register" asp-controller="Account">
-    <div class="form-horizontal">
-        <h4>Enter login information and email to register</h4>
-        <hr />
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        @if (Model?.Errors != null)
-        {
-            <div class="alert alert-danger">
-                <strong>Error</strong>
-                <ul>
-                    @foreach (var error in Model.Errors)
-                    {
-                        <li>@error.Description</li>
-                    }
-                </ul>
+<div class="container page-header">
+    <form asp-action="Register" asp-controller="Account">
+        <div class="form-horizontal">
+            <h3>Enter login information and email to register</h3>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @if (Model?.Errors != null)
+            {
+                <div class="alert alert-danger">
+                    <strong>Error</strong>
+                    <ul>
+                        @foreach (var error in Model.Errors)
+                        {
+                            <li>@error.Description</li>
+                        }
+                    </ul>
+                </div>
+            }
+            <div class="form-group">
+                <label asp-for="UserName" class="col-md-2 control-label">Username:</label>
+                <div class="col-md-10">
+                    <input asp-for="UserName" class="form-control" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
             </div>
-        }
-        <div class="form-group">
-            <label asp-for="UserName" class="col-md-2 control-label">Username:</label>
-            <div class="col-md-10">
-                <input asp-for="UserName" class="form-control" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
+            <div class="form-group">
+                <label asp-for="Password" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConfirmPassword" class="col-md-2 control-label">Confirm Password:</label>
+                <div class="col-md-10">
+                    <input asp-for="ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Register" class="btn btn-primary" />
+                </div>
             </div>
         </div>
-        <div class="form-group">
-            <label asp-for="Password" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="ConfirmPassword" class="col-md-2 control-label">Confirm Password:</label>
-            <div class="col-md-10">
-                <input asp-for="ConfirmPassword" class="form-control" />
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="Email" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Register" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
-</form>
-
+    </form>
+</div>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

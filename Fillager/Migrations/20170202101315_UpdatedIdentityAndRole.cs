@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Fillager.Migrations
 {
@@ -27,7 +25,7 @@ namespace Fillager.Migrations
                 defaultValue: 0L);
 
             migrationBuilder.AddColumn<long>(
-                name: "StorageUsedIn",
+                name: "StorageUsed",
                 table: "AspNetUsers",
                 nullable: false,
                 defaultValue: 0L);
@@ -58,7 +56,7 @@ namespace Fillager.Migrations
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "StorageUsedIn",
+                name: "StorageUsed",
                 table: "AspNetUsers");
         }
     }

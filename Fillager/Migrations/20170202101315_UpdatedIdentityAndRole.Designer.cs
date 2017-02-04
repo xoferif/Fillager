@@ -3,12 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Fillager.Models;
-using Fillager.Models.Account;
+using Fillager.DataAccessLayer;
 
 namespace Fillager.Migrations
 {
-    [DbContext(typeof(MyIdentityDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20170202101315_UpdatedIdentityAndRole")]
     partial class UpdatedIdentityAndRole
     {
