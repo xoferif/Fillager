@@ -3,10 +3,7 @@
     ViewData["Title"] = "Home";
     var privateFiles = Model.PrivateFiles;
     var publicFiles = Model.PublicFiles;
-
-
 }
-
 
 <div class="page-header">
     <div class="panel-group">
@@ -34,8 +31,31 @@
                 {
                     foreach (var file in privateFiles)
                     {
-                        <a class="list-group-item" asp-controller="Fillager" asp-action="DownloadFile" asp-route-id="@file.FileId">@file.FileName</a>
+                        <div class="clearfix panel list-group-item hoverable">
+                            <span>@file.FileName</span>
+                            <span class="pull-right">
+                                <a id="file-dl-@file.FileId" asp-controller="Fillager" asp-action="DownloadFile" asp-route-id="@file.FileId" class="btn btn-xs btn-info">
+                                    <span class="glyphicon glyphicon-download-alt"></span>
+                                </a>
+                                <span class="btn btn-xs btn-info">
+                                    <span class="glyphicon glyphicon-link copyBtn" data-clipboard-text="@Url.Action("DownloadFile", "Fillager",null,protocol:"http")/@file.FileId"></span>
+                                </span>
+                                <a class="btn btn-xs btn-warning" href="http://www.jquery2dotnet.com">
+                                    <span class="glyphicon glyphicon-pencil"></span>
+                                </a>
+                                
+                                <a  asp-controller="Fillager"
+                                    asp-action="DeletePopup"
+                                    asp-route-fileId="@file.FileId"
+                                    data-target="#modal-container"
+                                    data-toggle="modal"
+                                    class="btn btn-xs btn-danger">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </a>
+                            </span>
+                        </div>
                     }
+
                 }
                 else
                 {
@@ -67,3 +87,38 @@
         </div>
     </div>
 </div>
+
+<div id="modal-container" class="modal fade hidden-print" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .hoverable:hover {
+        background-color: #ecf0f1;
+    }
+</style>
+@section Scripts
+{
+    <script src="https://cdn.jsdelivr.net/clipboard.js/1.5.16/clipboard.min.js"></script>
+    <script>
+        new Clipboard('.copyBtn');
+    </script>
+     
+    <script>
+        $(function () {
+            // when the modal is closed
+            $('#modal-container').on('hidden.bs.modal', function () {
+                // remove the bs.modal data attribute from it
+                $(this).removeData('bs.modal');
+                // and empty the modal-content element
+                $('#modal-container .modal-content').empty();
+            });
+        });
+    </script>
+}
+

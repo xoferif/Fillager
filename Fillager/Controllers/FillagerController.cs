@@ -7,6 +7,7 @@ using Fillager.DataAccessLayer;
 using Fillager.Models.Account;
 using Fillager.Services;
 using Fillager.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -62,6 +63,25 @@ namespace Fillager.Controllers
             return View(viewmodel);
         }
 
+        public IActionResult DeletePopup(string fileId)
+        {
+            var file = _db.Files.Find(fileId);
+
+            ViewBag.FileName = file.FileName;
+            ViewBag.FileId = file.FileId;
+
+            return PartialView("Partials/DeleteFilePopup");
+        }
+        [Authorize]
+        public IActionResult DeleteFile(string fileId)
+        {
+            //todo check permissions, move stuff from upload into its own method and call it from here? or make identity claims?
+            var file = _db.Files.Find(fileId);
+            _db.Files.Remove(file);
+            _db.SaveChanges();
+
+            return RedirectToAction("TransferWindow");
+        }
         #endregion
 
 
@@ -114,5 +134,7 @@ namespace Fillager.Controllers
                 return File(_minioService.DownloadFile("testbucket", id), "application/x-msdownload", file.FileName);
             return null;//TODO cannot return null from a FileResult........ 
         }
+
+
     }
 }
