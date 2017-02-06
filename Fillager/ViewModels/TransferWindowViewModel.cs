@@ -7,6 +7,5 @@ namespace Fillager.ViewModels
     {
         public IList<File> PublicFiles { get; set; }
         public IList<File> PrivateFiles { get; set; }
-
     }
 }

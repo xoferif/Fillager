@@ -1,27 +1,28 @@
-﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+﻿@using Microsoft.ApplicationInsights.AspNetCore
+@inject JavaScriptSnippet JavaScriptSnippet
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - NetDisk</title>
 
     <environment names="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css"/>
         <link rel="stylesheet" href="~/css/flatly.bootstrap.min.css"/>
-        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/site.css"/>
     </environment>
     <environment names="Staging,Production">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/css/flatly.bootstrap.min.css" asp-append-version="true" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"/>
+        <link rel="stylesheet" href="~/css/flatly.bootstrap.min.css" asp-append-version="true"/>
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true"/>
     </environment>
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
 <body>
-    @Html.Partial("Navbar")
+@Html.Partial("Navbar")
 
 <div class="container body-content">
     @RenderBody()
@@ -30,7 +31,8 @@
         <table style="width: 100%">
             <tr>
                 <th style="text-align: right">
-                    <p>&copy; 2017 - NetDisk Fillager</p></th>
+                    <p>&copy; 2017 - NetDisk Fillager</p>
+                </th>
             </tr>
         </table>
 
@@ -59,6 +61,6 @@
     <script src="~/js/site.min.js" asp-append-version="true"></script>
 </environment>
 
-@RenderSection("Scripts", required: false)
+@RenderSection("Scripts", false)
 </body>
 </html>

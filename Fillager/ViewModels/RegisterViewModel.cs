@@ -22,12 +22,13 @@ namespace Fillager.ViewModels
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "The 'Password' and 'Confirm Password' fields must match")]
         public string ConfirmPassword { get; set; }
+
         [Required]
         [EmailAddress]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
-        
+
         public List<IdentityError> Errors { get; set; }
     }
 }

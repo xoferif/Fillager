@@ -38,7 +38,7 @@
                                     <span class="glyphicon glyphicon-download-alt"></span>
                                 </a>
                                 <span class="btn btn-xs btn-info">
-                                    <span class="glyphicon glyphicon-link copyBtn" data-clipboard-text="@Url.Action("DownloadFile", "Fillager",null,protocol:"http")/@file.FileId"></span>
+                                    <span class="glyphicon glyphicon-link copyBtn" data-clipboard-text="@Url.Action("DownloadFile", "Fillager", null, "http")/@file.FileId"></span>
                                 </span>
                                 <a asp-controller="Fillager"
                                    asp-action="EditFilePopup"
@@ -48,19 +48,18 @@
                                    class="btn btn-xs btn-warning">
                                     <span class="glyphicon glyphicon-pencil"></span>
                                 </a>
-                                
-                                <a  asp-controller="Fillager"
-                                    asp-action="DeletePopup"
-                                    asp-route-fileId="@file.FileId"
-                                    data-target="#modal-container"
-                                    data-toggle="modal"
-                                    class="btn btn-xs btn-danger">
+
+                                <a asp-controller="Fillager"
+                                   asp-action="DeletePopup"
+                                   asp-route-fileId="@file.FileId"
+                                   data-target="#modal-container"
+                                   data-toggle="modal"
+                                   class="btn btn-xs btn-danger">
                                     <span class="glyphicon glyphicon-trash"></span>
                                 </a>
                             </span>
                         </div>
                     }
-
                 }
                 else
                 {
@@ -103,9 +102,7 @@
 
 
 <style>
-    .hoverable:hover {
-        background-color: #ecf0f1;
-    }
+    .hoverable:hover { background-color: #ecf0f1; }
 </style>
 @section Scripts
 {
@@ -113,17 +110,17 @@
     <script>
         new Clipboard('.copyBtn');
     </script>
-     
+
     <script>
-        $(function () {
+        $(function() {
             // when the modal is closed
-            $('#modal-container').on('hidden.bs.modal', function () {
-                // remove the bs.modal data attribute from it
-                $(this).removeData('bs.modal');
-                // and empty the modal-content element
-                $('#modal-container .modal-content').empty();
-            });
+            $('#modal-container').on('hidden.bs.modal',
+                function() {
+                    // remove the bs.modal data attribute from it
+                    $(this).removeData('bs.modal');
+                    // and empty the modal-content element
+                    $('#modal-container .modal-content').empty();
+                });
         });
     </script>
 }
-

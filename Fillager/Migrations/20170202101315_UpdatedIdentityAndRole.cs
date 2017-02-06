@@ -7,32 +7,32 @@ namespace Fillager.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<long>(
-                name: "EarnedExtraStorage",
-                table: "AspNetUsers",
+                "EarnedExtraStorage",
+                "AspNetUsers",
                 nullable: false,
                 defaultValue: 0L);
 
             migrationBuilder.AddColumn<long>(
-                name: "OtherStorageBonus",
-                table: "AspNetUsers",
+                "OtherStorageBonus",
+                "AspNetUsers",
                 nullable: false,
                 defaultValue: 0L);
 
             migrationBuilder.AddColumn<long>(
-                name: "PayedExtraStorage",
-                table: "AspNetUsers",
+                "PayedExtraStorage",
+                "AspNetUsers",
                 nullable: false,
                 defaultValue: 0L);
 
             migrationBuilder.AddColumn<long>(
-                name: "StorageUsed",
-                table: "AspNetUsers",
+                "StorageUsed",
+                "AspNetUsers",
                 nullable: false,
                 defaultValue: 0L);
 
             migrationBuilder.AddColumn<long>(
-                name: "DefaultStorage",
-                table: "AspNetRoles",
+                "DefaultStorage",
+                "AspNetRoles",
                 nullable: false,
                 defaultValue: 0L);
         }
@@ -40,24 +40,24 @@ namespace Fillager.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "DefaultStorage",
-                table: "AspNetRoles");
+                "DefaultStorage",
+                "AspNetRoles");
 
             migrationBuilder.DropColumn(
-                name: "EarnedExtraStorage",
-                table: "AspNetUsers");
+                "EarnedExtraStorage",
+                "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "OtherStorageBonus",
-                table: "AspNetUsers");
+                "OtherStorageBonus",
+                "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "PayedExtraStorage",
-                table: "AspNetUsers");
+                "PayedExtraStorage",
+                "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "StorageUsed",
-                table: "AspNetUsers");
+                "StorageUsed",
+                "AspNetUsers");
         }
     }
 }

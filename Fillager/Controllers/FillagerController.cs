@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,7 +11,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using File = Fillager.Models.Files.File;
 
 namespace Fillager.Controllers
@@ -31,107 +29,6 @@ namespace Fillager.Controllers
             _minioService = minioService;
             _db = db;
         }
-
-        #region view requests
-
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            return View();
-        }
-
-        public IActionResult About()
-        {
-            return View();
-        }
-
-        public IActionResult TransferWindow()
-        {
-            var publicFiles = _db.Files.Where(file => file.OwnerGuid == null && file.IsPublic).ToList();
-            var privateFiles = new List<File>();
-
-            var user = _userManager.GetUserAsync(User).Result; //Users = Claims principal, get the object instead
-            if (User.Identity.IsAuthenticated)
-            {
-                privateFiles = _db.Files.Where(file => file.OwnerGuid.Id == user.Id).ToList();
-            }
-
-            var viewmodel = new TransferWindowViewModel() {PrivateFiles = privateFiles, PublicFiles = publicFiles};
-            return View(viewmodel);
-        }
-
-        public IActionResult DeletePopup(string fileId)
-        {
-            var file = _db.Files.Find(fileId);
-
-            ViewBag.FileName = file.FileName;
-            ViewBag.FileId = file.FileId;
-
-            return PartialView("Partials/DeleteFilePopup");
-        }
-        [Authorize]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteFile(string fileId)
-        {
-            var file = await _db.Files.FindAsync(fileId);
-            var user = await _userManager.GetUserAsync(User);
-
-            if (file.OwnerGuid != null && file.OwnerGuid == user)
-            {
-                _db.Files.Remove(file);
-                _db.SaveChanges();
-                return RedirectToAction("TransferWindow");
-            }
-
-            return Unauthorized();
-        }
-
-        public IActionResult EditFilePopup(string fileId)
-        {
-            return PartialView("Partials/EditFilePopup", _db.Files.Find(fileId));
-        }
-        // POST: Files/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [Authorize]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditFile([Bind("FileId,FileName,IsPublic")] File file)
-        {
-            if (file.FileId == null) return NotFound();
-            if (!ModelState.IsValid) return PartialView("Partials/EditFilePopup", file);
-            if (!FileExists(file.FileId)) return NotFound();
-
-            try
-            {
-                var user = await _userManager.GetUserAsync(User);
-                var originalFile = await _db.Files.FindAsync(file.FileId);
-
-                if (originalFile.OwnerGuid != user) return Unauthorized();
-
-                var updatedFile = originalFile;
-
-                updatedFile.FileName = file.FileName;
-                updatedFile.IsPublic = file.IsPublic;
-
-                _db.Update(updatedFile);//todo check user has access to file
-                await _db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (FileExists(file.FileId))
-                {
-                    return NotFound();
-                }
-                throw;
-            }
-            return RedirectToAction("TransferWindow");
-        }
-        #endregion
 
         //todo these are view requests too..... should be moved up
         [HttpPost]
@@ -181,12 +78,112 @@ namespace Fillager.Controllers
 
             if (amIAllowedToDownload)
                 return File(_minioService.DownloadFile("testbucket", id), "application/x-msdownload", file.FileName);
-            return null;//TODO cannot return null from a FileResult........ 
+            return null; //TODO cannot return null from a FileResult........ 
         }
 
         private bool FileExists(string id)
         {
             return _db.Files.Any(e => e.FileId == id);
         }
+
+        #region view requests
+
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult Contact()
+        {
+            return View();
+        }
+
+        public IActionResult About()
+        {
+            return View();
+        }
+
+        public IActionResult TransferWindow()
+        {
+            var publicFiles = _db.Files.Where(file => file.OwnerGuid == null && file.IsPublic).ToList();
+            var privateFiles = new List<File>();
+
+            var user = _userManager.GetUserAsync(User).Result; //Users = Claims principal, get the object instead
+            if (User.Identity.IsAuthenticated)
+                privateFiles = _db.Files.Where(file => file.OwnerGuid.Id == user.Id).ToList();
+
+            var viewmodel = new TransferWindowViewModel {PrivateFiles = privateFiles, PublicFiles = publicFiles};
+            return View(viewmodel);
+        }
+
+        public IActionResult DeletePopup(string fileId)
+        {
+            var file = _db.Files.Find(fileId);
+
+            ViewBag.FileName = file.FileName;
+            ViewBag.FileId = file.FileId;
+
+            return PartialView("Partials/DeleteFilePopup");
+        }
+
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteFile(string fileId)
+        {
+            var file = await _db.Files.FindAsync(fileId);
+            var user = await _userManager.GetUserAsync(User);
+
+            if (file.OwnerGuid != null && file.OwnerGuid == user)
+            {
+                _db.Files.Remove(file);
+                _db.SaveChanges();
+                return RedirectToAction("TransferWindow");
+            }
+
+            return Unauthorized();
+        }
+
+        public IActionResult EditFilePopup(string fileId)
+        {
+            return PartialView("Partials/EditFilePopup", _db.Files.Find(fileId));
+        }
+
+        // POST: Files/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditFile([Bind("FileId,FileName,IsPublic")] File file)
+        {
+            if (file.FileId == null) return NotFound();
+            if (!ModelState.IsValid) return PartialView("Partials/EditFilePopup", file);
+            if (!FileExists(file.FileId)) return NotFound();
+
+            try
+            {
+                var user = await _userManager.GetUserAsync(User);
+                var originalFile = await _db.Files.FindAsync(file.FileId);
+
+                if (originalFile.OwnerGuid != user) return Unauthorized();
+
+                var updatedFile = originalFile;
+
+                updatedFile.FileName = file.FileName;
+                updatedFile.IsPublic = file.IsPublic;
+
+                _db.Update(updatedFile); //todo check user has access to file
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (FileExists(file.FileId))
+                    return NotFound();
+                throw;
+            }
+            return RedirectToAction("TransferWindow");
+        }
+
+        #endregion
     }
 }

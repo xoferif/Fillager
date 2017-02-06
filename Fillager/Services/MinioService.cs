@@ -17,7 +17,7 @@ namespace Fillager.Services
         private const string SecretAccessKey = "f50a73124f5699570beb9ad44cd941";
 
         /// <summary>
-        /// Uploads a stream to minio
+        ///     Uploads a stream to minio
         /// </summary>
         /// <param name="bucketName">the bucket under which to save the datastream</param>
         /// <param name="dataStream">the object to save</param>
@@ -30,12 +30,10 @@ namespace Fillager.Services
 
 
             if (!bucketExist)
-            {
                 await client.PutBucketAsync(bucketName);
-            }
             var fileId = Guid.NewGuid().ToString();
-            
-            var putResult = await GetClient().PutObjectAsync(new PutObjectRequest()
+
+            var putResult = await GetClient().PutObjectAsync(new PutObjectRequest
             {
                 BucketName = bucketName,
                 Key = fileId,
@@ -61,18 +59,17 @@ namespace Fillager.Services
         private static AmazonS3Client GetClient()
         {
             AWSCredentials creds = new BasicAWSCredentials(AccessKey, SecretAccessKey);
-           
-            var config = new AmazonS3Config()
+
+            var config = new AmazonS3Config
             {
                 RegionEndpoint = RegionEndpoint.EUWest1,
                 SignatureVersion = "v4",
-                ForcePathStyle = true,//required for minio
+                ForcePathStyle = true, //required for minio
                 ServiceURL = MinioUrl
             };
 
             var client = new AmazonS3Client(creds, config);
             return client;
         }
-
     }
 }

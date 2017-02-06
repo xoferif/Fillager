@@ -1,22 +1,22 @@
 using System.Linq;
 using Fillager.Models.Account;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
 using Fillager.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Fillager.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<UserIdentity> _userManager;
         private readonly SignInManager<UserIdentity> _loginManager;
         private readonly RoleManager<UserRole> _roleManager;
+        private readonly UserManager<UserIdentity> _userManager;
 
 
         public AccountController(UserManager<UserIdentity> userManager,
-           SignInManager<UserIdentity> loginManager,
-           RoleManager<UserRole> roleManager)
+            SignInManager<UserIdentity> loginManager,
+            RoleManager<UserRole> roleManager)
         {
             _userManager = userManager;
             _loginManager = loginManager;
@@ -27,7 +27,6 @@ namespace Fillager.Controllers
 
         public IActionResult Register()
         {
-            
             return View("RegistrationView");
         }
 
@@ -46,7 +45,7 @@ namespace Fillager.Controllers
             var result = _userManager.CreateAsync
                 (user, obj.Password).Result;
 
-            
+
             if (!result.Succeeded)
             {
                 obj.Errors = result.Errors.ToList();
@@ -65,7 +64,7 @@ namespace Fillager.Controllers
                 {
                     ModelState.AddModelError("",
                         "Error while creating role!");
-                    return View("RegistrationView",obj);
+                    return View("RegistrationView", obj);
                 }
             }
 
@@ -73,7 +72,7 @@ namespace Fillager.Controllers
                 "NormalUser").Wait();
 
             //Registered!
-            
+
             //this.AddToastMessage("Success", $"Your account: {obj.UserName} has been registered", ToastType.Success);
 
             return RedirectToAction("Index", "Fillager");
@@ -82,6 +81,7 @@ namespace Fillager.Controllers
         #endregion
 
         #region login / logoff
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Login(LoginViewModel obj)
@@ -90,16 +90,14 @@ namespace Fillager.Controllers
             {
                 var result = _loginManager.PasswordSignInAsync
                 (obj.UserName, obj.Password,
-                  obj.RememberMe, false).Result;
+                    obj.RememberMe, false).Result;
 
                 if (result.Succeeded)
-                {
                     return RedirectToAction("Index", "Fillager");
-                }
 
                 ModelState.AddModelError("", "Invalid login!");
             }
-            return View("LoginView",obj);
+            return View("LoginView", obj);
         }
 
 
@@ -111,6 +109,5 @@ namespace Fillager.Controllers
         }
 
         #endregion
-
     }
 }

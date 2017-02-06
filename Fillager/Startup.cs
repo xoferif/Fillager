@@ -16,8 +16,8 @@ namespace Fillager
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile("appsettings.json", false, true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -28,10 +28,8 @@ namespace Fillager
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.UseMySQL(Configuration.GetConnectionString("DefaultConnection"));
-            });
+            services.AddDbContext<ApplicationDbContext>(
+                options => { options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")); });
 
             services.AddIdentity<UserIdentity, UserRole>(identityOptions =>
                 {
@@ -43,16 +41,16 @@ namespace Fillager
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-            services.AddAuthorization(authorizationOptions =>
-            {
-                authorizationOptions.AddPolicy("ElevatedRights", policy => policy.RequireRole("Admin"));
-            });
+            services.AddAuthorization(
+                authorizationOptions =>
+                {
+                    authorizationOptions.AddPolicy("ElevatedRights", policy => policy.RequireRole("Admin"));
+                });
 
             services.AddMvc();
 
             //Filelager services
             services.AddTransient<IMinioService, MinioService>();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,7 +63,6 @@ namespace Fillager
             {
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
-                
             }
             else
             {
@@ -77,8 +74,8 @@ namespace Fillager
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Fillager}/{action=Index}/{id?}");
+                    "default",
+                    "{controller=Fillager}/{action=Index}/{id?}");
             });
         }
     }

@@ -1,6 +1,6 @@
 @model Fillager.ViewModels.LoginViewModel
 @{
-  ViewData["Title"] = "Login";
+    ViewData["Title"] = "Login";
 }
 <form asp-action="Login" asp-controller="Account">
     <div class="form-horizontal">
@@ -8,33 +8,33 @@
         <div class="form-group">
             <!--<label asp-for="UserName" class="col-md-2 control-label"></label>-->
             <div class="col-md-12">
-                <input asp-for="UserName" placeholder="Username" class="form-control" />
+                <input asp-for="UserName" placeholder="Username" class="form-control"/>
                 <!--<span asp-validation-for="UserName" class="text-danger">Username:</span>-->
             </div>
         </div>
         <div class="form-group">
             <!--<label asp-for="Password" class="col-md-2 control-label"></label>-->
             <div class="col-md-12">
-                <input asp-for="Password" placeholder="Password" class="form-control" />
+                <input asp-for="Password" placeholder="Password" class="form-control"/>
                 <!--<span asp-validation-for="Password" class="text-danger">Password:</span>-->
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-12">
                 <div class="checkbox" style="padding-left: 20px">
-                    <input asp-for="RememberMe" />
+                    <input asp-for="RememberMe"/>
                     <label asp-for="RememberMe">Remember me</label>
                 </div>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-12">
-                <input type="submit" value="Login" class="btn col-xs-12 btn-primary" />
+                <input type="submit" value="Login" class="btn col-xs-12 btn-primary"/>
             </div>
         </div>
     </div>
 </form>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

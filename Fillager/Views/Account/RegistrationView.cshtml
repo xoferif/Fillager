@@ -1,6 +1,6 @@
 @model Fillager.ViewModels.RegisterViewModel
-@{ 
-  ViewData["Title"] = "Register";
+@{
+    ViewData["Title"] = "Register";
 }
 
 
@@ -8,7 +8,7 @@
     <form asp-action="Register" asp-controller="Account">
         <div class="form-horizontal">
             <h3>Enter login information and email to register</h3>
-            <hr />
+            <hr/>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             @if (Model?.Errors != null)
             {
@@ -25,40 +25,39 @@
             <div class="form-group">
                 <label asp-for="UserName" class="col-md-2 control-label">Username:</label>
                 <div class="col-md-10">
-                    <input asp-for="UserName" class="form-control" />
+                    <input asp-for="UserName" class="form-control"/>
                     <span asp-validation-for="UserName" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group">
                 <label asp-for="Password" class="col-md-2 control-label"></label>
                 <div class="col-md-10">
-                    <input asp-for="Password" class="form-control" />
+                    <input asp-for="Password" class="form-control"/>
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group">
                 <label asp-for="ConfirmPassword" class="col-md-2 control-label">Confirm Password:</label>
                 <div class="col-md-10">
-                    <input asp-for="ConfirmPassword" class="form-control" />
+                    <input asp-for="ConfirmPassword" class="form-control"/>
                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group">
                 <label asp-for="Email" class="col-md-2 control-label"></label>
                 <div class="col-md-10">
-                    <input asp-for="Email" class="form-control" />
+                    <input asp-for="Email" class="form-control"/>
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Register" class="btn btn-primary" />
+                    <input type="submit" value="Register" class="btn btn-primary"/>
                 </div>
             </div>
         </div>
     </form>
 </div>
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
-

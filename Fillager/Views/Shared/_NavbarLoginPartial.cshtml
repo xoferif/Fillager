@@ -1,24 +1,25 @@
-﻿@using Fillager.Models
-@using Fillager.Models.Account
+﻿@using Fillager.Models.Account
 @using Microsoft.AspNetCore.Identity
-@using Microsoft.AspNetCore.Identity.EntityFrameworkCore
-
 @inject SignInManager<UserIdentity> SignInManager
 @inject UserManager<UserIdentity> UserManager
 
 @if (SignInManager.IsSignedIn(User))
 {
     <ul class="nav navbar-nav navbar-right">
-        <li><a asp-area="" asp-controller="Account" asp-action="LogOff">Log Out</a></li>
+        <li>
+            <a asp-area="" asp-controller="Account" asp-action="LogOff">Log Out</a>
+        </li>
     </ul>
 }
 else
 {
     <ul class="nav navbar-nav navbar-right ">
-        <li><a asp-area="" asp-controller="Account" asp-action="Register">Sign Up</a></li>
+        <li>
+            <a asp-area="" asp-controller="Account" asp-action="Register">Sign Up</a>
+        </li>
         <li class="dropdown">
             <a class="dropdown-toggle" href="#" data-toggle="dropdown">Sign In <strong class="caret"></strong></a>
-            <div class="dropdown-menu col-xs-12" style="padding: 15px; padding-bottom: 0; min-width: 250px">
+            <div class="dropdown-menu col-xs-12" style="min-width: 250px; padding: 15px; padding-bottom: 0;">
                 @await Html.PartialAsync("~/Views/Account/LoginView.cshtml")
             </div>
         </li>

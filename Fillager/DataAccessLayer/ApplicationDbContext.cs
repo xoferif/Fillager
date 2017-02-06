@@ -9,7 +9,7 @@ namespace Fillager.DataAccessLayer
     public class ApplicationDbContext : IdentityDbContext<UserIdentity, UserRole, string>
     {
         public ApplicationDbContext(DbContextOptions options)
-        : base(options)
+            : base(options)
         {
             try
             {
@@ -21,7 +21,7 @@ namespace Fillager.DataAccessLayer
                 Console.WriteLine(e);
             }
         }
-        public DbSet<File> Files { get; set; }
 
+        public DbSet<File> Files { get; set; }
     }
 }

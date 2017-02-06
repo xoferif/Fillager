@@ -12,11 +12,11 @@ namespace Fillager.Models.Account
 
         public long OtherStorageBonus { get; [Authorize(Policy = "ElevatedRights")] set; } = 0;
 
-        public long StorageSpace => EarnedExtraStorage + PayedExtraStorage + OtherStorageBonus; //todo add role specific storage
+        public long StorageSpace => EarnedExtraStorage + PayedExtraStorage + OtherStorageBonus;
+        //todo add role specific storage
 
         public long StorageUsed { get; set; }
-        
-        public virtual ICollection<File> Files { get; set; }
 
+        public virtual ICollection<File> Files { get; set; }
     }
 }
