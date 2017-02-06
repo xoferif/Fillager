@@ -27,14 +27,14 @@ namespace Fillager.Controllers
 
         public IActionResult Register()
         {
-            return View("RegistrationView");
+            return View("Registration");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Register(RegisterViewModel obj)
         {
-            if (!ModelState.IsValid) return View("RegistrationView", obj);
+            if (!ModelState.IsValid) return View("Registration", obj);
 
             var user = new UserIdentity
             {
@@ -50,7 +50,7 @@ namespace Fillager.Controllers
             {
                 obj.Errors = result.Errors.ToList();
                 //todo use ModelState.AddModelError(); instead?
-                return View("RegistrationView", obj);
+                return View("Registration", obj);
             }
 
             if (!_roleManager.RoleExistsAsync("NormalUser").Result)
@@ -64,7 +64,7 @@ namespace Fillager.Controllers
                 {
                     ModelState.AddModelError("",
                         "Error while creating role!");
-                    return View("RegistrationView", obj);
+                    return View("Registration", obj);
                 }
             }
 
@@ -75,12 +75,17 @@ namespace Fillager.Controllers
 
             //this.AddToastMessage("Success", $"Your account: {obj.UserName} has been registered", ToastType.Success);
 
-            return RedirectToAction("Index", "Fillager");
+            return RedirectToAction("Index", "Home");
         }
 
         #endregion
 
         #region login / logoff
+
+        public IActionResult Login()
+        {
+            return View("Login");
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -93,11 +98,11 @@ namespace Fillager.Controllers
                     obj.RememberMe, false).Result;
 
                 if (result.Succeeded)
-                    return RedirectToAction("Index", "Fillager");
+                    return RedirectToAction("Index", "Home");
 
                 ModelState.AddModelError("", "Invalid login!");
             }
-            return View("LoginView", obj);
+            return View("Login", obj);
         }
 
 
@@ -105,7 +110,7 @@ namespace Fillager.Controllers
         public IActionResult LogOff()
         {
             _loginManager.SignOutAsync().Wait();
-            return RedirectToAction("Index", "Fillager");
+            return RedirectToAction("Index", "Home");
         }
 
         #endregion

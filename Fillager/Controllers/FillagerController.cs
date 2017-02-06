@@ -88,21 +88,6 @@ namespace Fillager.Controllers
 
         #region view requests
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            return View();
-        }
-
-        public IActionResult About()
-        {
-            return View();
-        }
-
         public IActionResult TransferWindow()
         {
             var publicFiles = _db.Files.Where(file => file.OwnerGuid == null && file.IsPublic).ToList();

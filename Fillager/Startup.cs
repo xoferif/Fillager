@@ -1,5 +1,6 @@
 ﻿using Fillager.DataAccessLayer;
 using Fillager.Models.Account;
+using Fillager.Models.Menu;
 using Fillager.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -46,8 +47,9 @@ namespace Fillager
                 {
                     authorizationOptions.AddPolicy("ElevatedRights", policy => policy.RequireRole("Admin"));
                 });
-
             services.AddMvc();
+
+            services.AddScoped<MenuDataRepository>();
 
             //Filelager services
             services.AddTransient<IMinioService, MinioService>();
@@ -68,14 +70,13 @@ namespace Fillager
             {
                 app.UseExceptionHandler("/Shared/Error");
             }
-
             app.UseStaticFiles();
             app.UseIdentity();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     "default",
-                    "{controller=Fillager}/{action=Index}/{id?}");
+                    "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
