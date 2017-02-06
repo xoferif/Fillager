@@ -40,7 +40,12 @@
                                 <span class="btn btn-xs btn-info">
                                     <span class="glyphicon glyphicon-link copyBtn" data-clipboard-text="@Url.Action("DownloadFile", "Fillager",null,protocol:"http")/@file.FileId"></span>
                                 </span>
-                                <a class="btn btn-xs btn-warning" href="http://www.jquery2dotnet.com">
+                                <a asp-controller="Fillager"
+                                   asp-action="EditFilePopup"
+                                   asp-route-fileId="@file.FileId"
+                                   data-target="#modal-container"
+                                   data-toggle="modal"
+                                   class="btn btn-xs btn-warning">
                                     <span class="glyphicon glyphicon-pencil"></span>
                                 </a>
                                 

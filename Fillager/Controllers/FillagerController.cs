@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using File = Fillager.Models.Files.File;
 
@@ -73,18 +74,66 @@ namespace Fillager.Controllers
             return PartialView("Partials/DeleteFilePopup");
         }
         [Authorize]
-        public IActionResult DeleteFile(string fileId)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteFile(string fileId)
         {
-            //todo check permissions, move stuff from upload into its own method and call it from here? or make identity claims?
-            var file = _db.Files.Find(fileId);
-            _db.Files.Remove(file);
-            _db.SaveChanges();
+            var file = await _db.Files.FindAsync(fileId);
+            var user = await _userManager.GetUserAsync(User);
 
+            if (file.OwnerGuid != null && file.OwnerGuid == user)
+            {
+                _db.Files.Remove(file);
+                _db.SaveChanges();
+                return RedirectToAction("TransferWindow");
+            }
+
+            return Unauthorized();
+        }
+
+        public IActionResult EditFilePopup(string fileId)
+        {
+            return PartialView("Partials/EditFilePopup", _db.Files.Find(fileId));
+        }
+        // POST: Files/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditFile([Bind("FileId,FileName,IsPublic")] File file)
+        {
+            if (file.FileId == null) return NotFound();
+            if (!ModelState.IsValid) return PartialView("Partials/EditFilePopup", file);
+            if (!FileExists(file.FileId)) return NotFound();
+
+            try
+            {
+                var user = await _userManager.GetUserAsync(User);
+                var originalFile = await _db.Files.FindAsync(file.FileId);
+
+                if (originalFile.OwnerGuid != user) return Unauthorized();
+
+                var updatedFile = originalFile;
+
+                updatedFile.FileName = file.FileName;
+                updatedFile.IsPublic = file.IsPublic;
+
+                _db.Update(updatedFile);//todo check user has access to file
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (FileExists(file.FileId))
+                {
+                    return NotFound();
+                }
+                throw;
+            }
             return RedirectToAction("TransferWindow");
         }
         #endregion
 
-
+        //todo these are view requests too..... should be moved up
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadFiles(IList<IFormFile> files)
@@ -108,7 +157,7 @@ namespace Fillager.Controllers
 
                 await _db.SaveChangesAsync();
             }
-            return View("TransferWindow");
+            return RedirectToAction("TransferWindow");
         }
 
         /// <summary>
@@ -135,6 +184,9 @@ namespace Fillager.Controllers
             return null;//TODO cannot return null from a FileResult........ 
         }
 
-
+        private bool FileExists(string id)
+        {
+            return _db.Files.Any(e => e.FileId == id);
+        }
     }
 }
