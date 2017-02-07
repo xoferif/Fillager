@@ -6,24 +6,24 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Fillager.ViewComponents
 {
-    public class NavigationMenuViewComponent : ViewComponent
+    public class NavigationViewComponent : ViewComponent
     {
+        private readonly SignInManager<UserIdentity> _loginManager;
         private readonly MenuDataRepository _menuDataRepository;
 
-        public NavigationMenuViewComponent(MenuDataRepository menuDataRepository)
+        public NavigationViewComponent(MenuDataRepository menuDataRepository, SignInManager<UserIdentity> loginManager)
         {
             _menuDataRepository = menuDataRepository;
+            _loginManager = loginManager;
         }
 
-        //public IViewComponentResult Invoke()
-        //{
-        //    MenuItemListModel model = _menuDataRepository.GetMenus();
-        //    return View(model);
-        //}
-
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync(int i)
         {
-            MenuItemListModel model = await _menuDataRepository.GetMainMenu();
+            ViewBag.MenuType = i;
+            bool loggedin = _loginManager.IsSignedIn(HttpContext.User);
+            //bool isAdmin = User.IsInRole("Admin");
+            bool isAdmin = true;
+            MenuItemListModel model = await _menuDataRepository.GetMenu(loggedin, i, isAdmin);
             return View(model);
         }
     }
