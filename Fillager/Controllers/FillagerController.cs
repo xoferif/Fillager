@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,6 +18,8 @@ namespace Fillager.Controllers
 {
     public class FillagerController : Controller
     {
+        private const int DefaultStorage = 30 * 1024 * 1024; //Todo ENV var from docker
+        private const int PublicStorageLimit = 250 * 1024 * 1024; //Todo ENNV var from docker
         private readonly ApplicationDbContext _db;
         private readonly IMinioService _minioService;
 
@@ -63,15 +66,64 @@ namespace Fillager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadPublicFiles(IList<IFormFile> files)
         {
+            var sumOfFiles = files.Sum(file => file.Length);
+            if (sumOfFiles > PublicStorageLimit)
+            {
+                ViewBag.Error = "not enough storage in the public drive";
+                return RedirectToAction("PublicFileList");
+            }
+            if(_db.Files.Where(file => file.OwnerGuid == null && file.IsPublic).Sum(file => file.Size) + sumOfFiles >= PublicStorageLimit)
+                await FreeUpSpaceInPublicDrive(sumOfFiles);
+
+
             await UploadTask(files, true);
             return RedirectToAction("PublicFileList");
+        }
+
+        /// <summary>
+        /// removes public files from the db until the given space is made available
+        /// </summary>
+        /// <param name="spaceToFreeUp">space to remove</param>
+        /// <returns></returns>
+        private async Task FreeUpSpaceInPublicDrive(long spaceToFreeUp)
+        {
+            var filesToDelete = _db.Files
+                    .Where(file => file.OwnerGuid == null && file.IsPublic)
+                    .OrderBy(file => file.CreatedDateTime);
+
+            while (spaceToFreeUp > 0)
+            {
+                //todo magic number
+                var target = filesToDelete.Take(3).ToList();//take the 3 oldest files
+
+                spaceToFreeUp -= target.Sum(file => file.Size);//subtract their size from the space still needed
+
+                _db.Files.RemoveRange(target);//remove them
+
+            }
+            
+            await _db.SaveChangesAsync();
         }
 
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UploadPrivateFiles(IEnumerable<IFormFile> files)
+        public async Task<IActionResult> UploadPrivateFiles(IList<IFormFile> files)
         {
+            var sumOfFiles = files.Sum(file => file.Length);
+
+            var user = await _userManager.GetUserAsync(User);
+
+            var allowedStorage = user.StorageSpace + DefaultStorage;
+            var usedStorage = user.StorageUsed;
+
+            if (usedStorage + sumOfFiles > allowedStorage)
+            {
+                ViewBag.Error = "not enough free storage";
+                return RedirectToAction("PrivateFileList");
+            }
+
+
             await UploadTask(files, false);
             return RedirectToAction("PrivateFileList");
         }
@@ -92,6 +144,7 @@ namespace Fillager.Controllers
                     FileName = file.FileName,
                     IsPublic = forcePublic,
                     Size = file.Length,
+                    CreatedDateTime = DateTime.Now,
                     OwnerGuid = forcePublic ? null : await _userManager.GetUserAsync(User)
                 });
 

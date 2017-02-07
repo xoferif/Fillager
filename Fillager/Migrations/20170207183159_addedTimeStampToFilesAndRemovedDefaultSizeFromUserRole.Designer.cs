@@ -8,9 +8,10 @@ using Fillager.DataAccessLayer;
 namespace Fillager.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class MyIdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170207183159_addedTimeStampToFilesAndRemovedDefaultSizeFromUserRole")]
+    partial class addedTimeStampToFilesAndRemovedDefaultSizeFromUserRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.0-rtm-22752");

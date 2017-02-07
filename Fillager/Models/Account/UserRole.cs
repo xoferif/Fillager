@@ -5,6 +5,5 @@ namespace Fillager.Models.Account
 {
     public class UserRole : IdentityRole
     {
-        public long DefaultStorage { get; [Authorize(Policy = "ElevatedRights")] set; } = 30 * 1024;
     }
 }
