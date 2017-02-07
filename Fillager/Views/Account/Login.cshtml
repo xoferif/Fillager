@@ -1,36 +1,57 @@
+@using Fillager.Models.Account
+@using Microsoft.AspNetCore.Identity
+
 @model Fillager.ViewModels.LoginViewModel
+
 @{
     ViewData["Title"] = "Login";
 }
-<form asp-action="Login" asp-controller="Account">
-    <div class="form-horizontal">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-            <!--<label asp-for="UserName" class="col-md-2 control-label"></label>-->
-            <div class="col-md-12">
-                <input asp-for="UserName" placeholder="Username" class="form-control"/>
-                <!--<span asp-validation-for="UserName" class="text-danger">Username:</span>-->
-            </div>
-        </div>
-        <div class="form-group">
-            <!--<label asp-for="Password" class="col-md-2 control-label"></label>-->
-            <div class="col-md-12">
-                <input asp-for="Password" placeholder="Password" class="form-control"/>
-                <!--<span asp-validation-for="Password" class="text-danger">Password:</span>-->
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-12">
-                <div class="checkbox" style="padding-left: 20px">
-                    <input asp-for="RememberMe"/>
-                    <label asp-for="RememberMe">Remember me</label>
+
+@inject SignInManager<UserIdentity> SignInManager
+
+<div class="container page-header">
+    <section>
+        <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+            <h3>Use a local account to log in.</h3>
+            <hr />
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UserName" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="UserName" class="form-control" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
                 </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-12">
-                <input type="submit" value="Login" class="btn col-xs-12 btn-primary"/>
+            <div class="form-group">
+                <label asp-for="Password" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
             </div>
-        </div>
-    </div>
-</form>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <div class="checkbox">
+                        <label asp-for="RememberMe">
+                            <input asp-for="RememberMe" />
+                            @Html.DisplayNameFor(m => m.RememberMe)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button type="submit" class="btn btn-primary">Log in</button>
+                </div>
+            </div>
+            <p>
+                <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Register as a new user?</a>
+            </p>
+        </form>
+    </section>
+
+</div>
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
