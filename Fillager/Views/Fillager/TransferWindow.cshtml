@@ -27,46 +27,7 @@
                 </h4>
             </div>
             <div id="privateFileList" class="panel-collapse collapse in">
-                <div class="list-group">
-                    @if (privateFiles.Any())
-                    {
-                        foreach (var file in privateFiles)
-                        {
-                            <div class="clearfix panel list-group-item hoverable">
-                                <span>@file.FileName</span>
-                                <span class="pull-right">
-                                    <a id="file-dl-@file.FileId" asp-controller="Fillager" asp-action="DownloadFile" asp-route-id="@file.FileId" class="btn btn-xs btn-info">
-                                        <span class="glyphicon glyphicon-download-alt"></span>
-                                    </a>
-                                    <span class="btn btn-xs btn-info">
-                                        <span class="glyphicon glyphicon-link copyBtn" data-clipboard-text="@Url.Action("DownloadFile", "Fillager", null, "http")/@file.FileId"></span>
-                                    </span>
-                                    <a asp-controller="Fillager"
-                                       asp-action="EditFilePopup"
-                                       asp-route-fileId="@file.FileId"
-                                       data-target="#modal-container"
-                                       data-toggle="modal"
-                                       class="btn btn-xs btn-warning">
-                                        <span class="glyphicon glyphicon-pencil"></span>
-                                    </a>
-
-                                    <a asp-controller="Fillager"
-                                       asp-action="DeletePopup"
-                                       asp-route-fileId="@file.FileId"
-                                       data-target="#modal-container"
-                                       data-toggle="modal"
-                                       class="btn btn-xs btn-danger">
-                                        <span class="glyphicon glyphicon-trash"></span>
-                                    </a>
-                                </span>
-                            </div>
-                        }
-                    }
-                    else
-                    {
-                        <p class="list-group-item">No files here yet</p>
-                    }
-                </div>
+                @await Component.InvokeAsync("FileList", new {files = privateFiles, editable = true})
             </div>
         </div>
 
@@ -78,17 +39,7 @@
                 </h4>
             </div>
             <div id="publicFileList" class="panel-collapse list-group collapse in">
-                @if (publicFiles.Any())
-                {
-                    foreach (var file in publicFiles)
-                    {
-                        <a class="list-group-item" asp-controller="Fillager" asp-action="DownloadFile" asp-route-id="@file.FileId">@file.FileName</a>
-                    }
-                }
-                else
-                {
-                    <p class="list-group-item">No files here yet</p>
-                }
+                @await Component.InvokeAsync("FileList", new {files = publicFiles, editable = false})
             </div>
         </div>
     </div>
