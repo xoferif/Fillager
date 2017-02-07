@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Fillager.ViewComponents
 {
-    public class NavigationViewComponent : ViewComponent
+    public class NavigationMenuViewComponent : ViewComponent
     {
         private readonly SignInManager<UserIdentity> _loginManager;
         private readonly MenuDataRepository _menuDataRepository;
 
-        public NavigationViewComponent(MenuDataRepository menuDataRepository, SignInManager<UserIdentity> loginManager)
+        public NavigationMenuViewComponent(MenuDataRepository menuDataRepository, SignInManager<UserIdentity> loginManager)
         {
             _menuDataRepository = menuDataRepository;
             _loginManager = loginManager;
