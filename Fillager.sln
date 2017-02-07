@@ -1,11 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26127.0
+VisualStudioVersion = 15.0.26127.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fillager", "Fillager\Fillager.csproj", "{3BAE0C20-CEDF-4D5F-AEA3-2430E30723B8}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{04E58C41-5FC3-43A5-AFC2-5ACD622BC437}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "proxy conf", "proxy conf", "{5412FC77-01AF-493D-A406-0ADE64C7E2F5}"
+	ProjectSection(SolutionItems) = preProject
+		code\default.conf = code\default.conf
+		code\post-run-copy.sh = code\post-run-copy.sh
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -3,9 +3,20 @@ version: '2'
 services:
   fillager:
     image: fillager
+    ports:
+      - "80"
     build:
       context: ./Fillager
       dockerfile: Dockerfile
+
+  reverseproxy:
+    image: nginx:latest
+    ports:
+      - "8080"
+    volumes:
+      - ./code:/srv/ngin/
+    command: sh srv/ngin/post-run-copy.sh
+
 
   minio:
     image: minio/minio
