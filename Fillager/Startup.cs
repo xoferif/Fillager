@@ -1,4 +1,5 @@
-﻿using Fillager.DataAccessLayer;
+﻿using Fillager.Controllers;
+using Fillager.DataAccessLayer;
 using Fillager.Models.Account;
 using Fillager.Models.Menu;
 using Fillager.Services;
@@ -50,7 +51,7 @@ namespace Fillager
             services.AddMvc();
 
             services.AddScoped<MenuDataRepository>();
-
+            services.AddScoped<AccountController>();
             //Filelager services
             services.AddTransient<IMinioService, MinioService>();
         }

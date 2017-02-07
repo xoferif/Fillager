@@ -39,7 +39,7 @@ namespace Fillager.TagHelpers
             var currentController = routeData["controller"];
             var currentAction = routeData["action"];
 
-            var subMenus = _navigationMenu.GetMenus().Result.MenuItems.Where(m => m.ParentId == MenuId).ToList();
+            var subMenus = _navigationMenu.GetMainMenu().Result.MenuItems.Where(m => m.ParentId == MenuId).ToList();
 
             if (subMenus.Count > 0)
             {

@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Fillager.Models.Account;
 using Fillager.Models.Menu;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fillager.ViewComponents
@@ -21,7 +23,7 @@ namespace Fillager.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            MenuItemListModel model = await _menuDataRepository.GetMenus();
+            MenuItemListModel model = await _menuDataRepository.GetMainMenu();
             return View(model);
         }
     }

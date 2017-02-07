@@ -32,10 +32,10 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-left">
-                @await Component.InvokeAsync("NavigationMenu")
+                @await Component.InvokeAsync("NavigationMenu", 0)
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                @await Component.InvokeAsync("EntryMenu")
+                @await Component.InvokeAsync("AccountMenu", 1)
             </ul>
         </div>
     </div>

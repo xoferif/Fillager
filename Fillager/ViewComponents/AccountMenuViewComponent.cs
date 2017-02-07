@@ -1,16 +1,20 @@
 ﻿using System.Threading.Tasks;
+using Fillager.Models.Account;
 using Fillager.Models.Menu;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fillager.ViewComponents
 {
-    public class EntryMenuViewComponent : ViewComponent
+    public class AccountMenuViewComponent : ViewComponent
     {
+        private readonly SignInManager<UserIdentity> _loginManager;
         private readonly MenuDataRepository _menuDataRepository;
 
-        public EntryMenuViewComponent(MenuDataRepository menuDataRepository)
+        public AccountMenuViewComponent(MenuDataRepository menuDataRepository, SignInManager<UserIdentity> loginManager)
         {
             _menuDataRepository = menuDataRepository;
+            _loginManager = loginManager;
         }
 
         //public IViewComponentResult Invoke()
@@ -21,7 +25,9 @@ namespace Fillager.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            MenuItemListModel model = await _menuDataRepository.GetMenus();
+            bool loggedin;
+            loggedin = _loginManager.IsSignedIn(HttpContext.User);
+            var model = await _menuDataRepository.GetAccountMenu(loggedin);
             return View(model);
         }
     }

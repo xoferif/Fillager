@@ -18,5 +18,6 @@ namespace Fillager.Models.Account
         public long StorageUsed { get; set; }
 
         public virtual ICollection<File> Files { get; set; }
+
     }
 }
