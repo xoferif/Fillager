@@ -1,16 +1,16 @@
-@model Fillager.ViewModels.TransferWindowViewModel
+@model IEnumerable<Fillager.Models.Files.File>
 @{
-    ViewData["Title"] = "Home";
-    var privateFiles = Model.PrivateFiles;
-    var publicFiles = Model.PublicFiles;
+    ViewData["Title"] = "Public Files";
 }
 
 <div class="page-header">
+    <h3>Public Files</h3>
+    <hr/>
     <div class="panel-group">
         <div class="panel panel-primary">
             <div class="panel-heading">Upload Files</div>
             <div class="panel-group">
-                <form asp-action="UploadFiles"
+                <form asp-action="UploadPublicFiles"
                       asp-controller="Fillager"
                       method="post"
                       enctype="multipart/form-data">
@@ -23,23 +23,11 @@
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#privateFileList">Your Files</a>
-                </h4>
-            </div>
-            <div id="privateFileList" class="panel-collapse collapse in">
-                @await Component.InvokeAsync("FileList", new {files = privateFiles, editable = true})
-            </div>
-        </div>
-
-
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h4 class="panel-title">
                     <a data-toggle="collapse" href="#publicFileList">Public Files</a>
                 </h4>
             </div>
             <div id="publicFileList" class="panel-collapse list-group collapse in">
-                @await Component.InvokeAsync("FileList", new {files = publicFiles, editable = false})
+                @await Component.InvokeAsync("FileList", new {files = Model, editable = false, showPublicMarker = false})
             </div>
         </div>
     </div>

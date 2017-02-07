@@ -8,7 +8,17 @@
         {
             <div class="clearfix panel list-group-item hoverable">
                 <span>@file.FileName</span>
-
+                @if (ViewBag.ShowPublicMarker)
+                    {
+                        if (file.IsPublic)
+                        {
+                        <span class="label label-danger" title="anyone can download this file">public</span>
+                    }
+                    else
+                    {
+                        <span class="label label-info" title="only you can download this file">private</span>
+                    }
+                }
 
                 <span class="pull-right">
                     <a id="file-dl-@file.FileId" asp-controller="Fillager" asp-action="DownloadFile" asp-route-id="@file.FileId" class="btn btn-xs btn-info">

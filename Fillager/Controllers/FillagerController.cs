@@ -30,10 +30,53 @@ namespace Fillager.Controllers
             _db = db;
         }
 
-        //todo these are view requests too..... should be moved up
+        private bool FileExists(string id)
+        {
+            return _db.Files.Any(e => e.FileId == id);
+        }
+
+        #region view requests
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult PrivateFileList()
+        {
+            var privateFiles = new List<File>();
+
+            var user = _userManager.GetUserAsync(User).Result; //Users = Claims principal, get the object instead
+            if (User.Identity.IsAuthenticated)
+                privateFiles = _db.Files.Where(file => file.OwnerGuid.Id == user.Id).ToList();
+
+            return View("PrivateTransferWindow", privateFiles);
+        }
+
+        [HttpGet]
+        public IActionResult PublicFileList()
+        {
+            var publicFiles = _db.Files.Where(file => file.OwnerGuid == null && file.IsPublic).ToList();
+            return View("PublicTransferWindow",publicFiles);
+        }
+
+        #region actions (Upload, Download, Edit, Delete)
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UploadFiles(IList<IFormFile> files)
+        public async Task<IActionResult> UploadPublicFiles(IList<IFormFile> files)
+        {
+            await UploadTask(files, true);
+            return RedirectToAction("PublicFileList");
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UploadPrivateFiles(IEnumerable<IFormFile> files)
+        {
+            await UploadTask(files, false);
+            return RedirectToAction("PrivateFileList");
+        }
+
+        private async Task UploadTask(IEnumerable<IFormFile> files, bool forcePublic)
         {
             foreach (var file in files)
             {
@@ -47,14 +90,13 @@ namespace Fillager.Controllers
                 {
                     FileId = id,
                     FileName = file.FileName,
-                    IsPublic = false,
+                    IsPublic = forcePublic,
                     Size = file.Length,
-                    OwnerGuid = await _userManager.GetUserAsync(User)
+                    OwnerGuid = forcePublic ? null : await _userManager.GetUserAsync(User)
                 });
 
                 await _db.SaveChangesAsync();
             }
-            return RedirectToAction("TransferWindow");
         }
 
         /// <summary>
@@ -81,61 +123,11 @@ namespace Fillager.Controllers
             return null; //TODO cannot return null from a FileResult........ 
         }
 
-        private bool FileExists(string id)
-        {
-            return _db.Files.Any(e => e.FileId == id);
-        }
-
-        #region view requests
-
-        public IActionResult TransferWindow()
-        {
-            var publicFiles = _db.Files.Where(file => file.OwnerGuid == null && file.IsPublic).ToList();
-            var privateFiles = new List<File>();
-
-            var user = _userManager.GetUserAsync(User).Result; //Users = Claims principal, get the object instead
-            if (User.Identity.IsAuthenticated)
-                privateFiles = _db.Files.Where(file => file.OwnerGuid.Id == user.Id).ToList();
-
-            var viewmodel = new TransferWindowViewModel {PrivateFiles = privateFiles, PublicFiles = publicFiles};
-            return View(viewmodel);
-        }
-
-        public IActionResult DeletePopup(string fileId)
-        {
-            var file = _db.Files.Find(fileId);
-
-            ViewBag.FileName = file.FileName;
-            ViewBag.FileId = file.FileId;
-
-            return PartialView("Partials/DeleteFilePopup");
-        }
-
-        [Authorize]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteFile(string fileId)
-        {
-            var file = await _db.Files.FindAsync(fileId);
-            var user = await _userManager.GetUserAsync(User);
-
-            if (file.OwnerGuid != null && file.OwnerGuid == user)
-            {
-                _db.Files.Remove(file);
-                _db.SaveChanges();
-                return RedirectToAction("TransferWindow");
-            }
-
-            return Unauthorized();
-        }
-
         public IActionResult EditFilePopup(string fileId)
         {
             return PartialView("Partials/EditFilePopup", _db.Files.Find(fileId));
         }
 
-        // POST: Files/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
@@ -166,8 +158,39 @@ namespace Fillager.Controllers
                     return NotFound();
                 throw;
             }
-            return RedirectToAction("TransferWindow");
+            return RedirectToAction("PrivateFileList");
         }
+
+
+        public IActionResult DeletePopup(string fileId)
+        {
+            var file = _db.Files.Find(fileId);
+
+            ViewBag.FileName = file.FileName;
+            ViewBag.FileId = file.FileId;
+
+            return PartialView("Partials/DeleteFilePopup");
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteFile(string fileId)
+        {
+            var file = await _db.Files.FindAsync(fileId);
+            var user = await _userManager.GetUserAsync(User);
+
+            if (file.OwnerGuid != null && file.OwnerGuid == user)
+            {
+                _db.Files.Remove(file);
+                _db.SaveChanges();
+                return RedirectToAction("PrivateFileList");
+            }
+
+            return Unauthorized();
+        }
+
+        #endregion
 
         #endregion
     }
