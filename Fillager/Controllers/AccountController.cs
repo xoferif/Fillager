@@ -9,13 +9,13 @@ namespace Fillager.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly SignInManager<UserIdentity> _loginManager;
+        private readonly SignInManager<ApplicationUser> _loginManager;
         private readonly RoleManager<UserRole> _roleManager;
-        private readonly UserManager<UserIdentity> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
 
-        public AccountController(UserManager<UserIdentity> userManager,
-            SignInManager<UserIdentity> loginManager,
+        public AccountController(UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> loginManager,
             RoleManager<UserRole> roleManager)
         {
             _userManager = userManager;
@@ -42,7 +42,7 @@ namespace Fillager.Controllers
         {
             if (!ModelState.IsValid) return View("Registration", obj);
 
-            var user = new UserIdentity
+            var user = new ApplicationUser
             {
                 UserName = obj.UserName,
                 Email = obj.Email

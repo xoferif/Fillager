@@ -23,10 +23,10 @@ namespace Fillager.Controllers
         private readonly ApplicationDbContext _db;
         private readonly IMinioService _minioService;
 
-        private readonly UserManager<UserIdentity> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public FillagerController(UserManager<UserIdentity>
-            userManager, SignInManager<UserIdentity> signInManager, IMinioService minioService, ApplicationDbContext db)
+        public FillagerController(UserManager<ApplicationUser>
+            userManager, SignInManager<ApplicationUser> signInManager, IMinioService minioService, ApplicationDbContext db)
         {
             _userManager = userManager;
             _minioService = minioService;
@@ -152,7 +152,7 @@ namespace Fillager.Controllers
             return RedirectToAction("PrivateFileList");
         }
 
-        public async Task UpdateUsedSpaceForUser(UserIdentity user, long additionalStorage)
+        public async Task UpdateUsedSpaceForUser(ApplicationUser user, long additionalStorage)
         {
             user.StorageUsed += additionalStorage;
             _db.Update(user);

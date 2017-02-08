@@ -36,8 +36,8 @@ namespace Fillager.Models.Menu
                     if (isAdmin)
                         MenuList.MenuItems.Add(new MenuItemModel(7, "Admin", "", "Admin", "Admin", 1));
                     MenuList.MenuItems.Add(new MenuItemModel(8, "Log off", "LogOff", "Account", "Sign Up", 1));
-                    MenuList.MenuItems.Add(new MenuItemModel(11, "Users", "About", "Home", "Users", 7));
-                    MenuList.MenuItems.Add(new MenuItemModel(12, "Statistics", "Contact", "Home", "Statistics", 7));
+                    MenuList.MenuItems.Add(new MenuItemModel(11, "Users", "Users", "Admin", "Users", 7));
+                    MenuList.MenuItems.Add(new MenuItemModel(12, "Statistics", "Statistics", "Admin", "Statistics", 7));
                 }
                 else
                 {

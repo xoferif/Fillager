@@ -27,6 +27,8 @@ namespace Fillager.Controllers
 
         public IActionResult Error()
         {
+            ViewData["Message"] = "Error page.";
+
             return View();
         }
     }
