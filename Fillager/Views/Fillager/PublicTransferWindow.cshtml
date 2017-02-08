@@ -1,6 +1,10 @@
-@model IEnumerable<Fillager.Models.Files.File>
+@model IList<Fillager.Models.Files.File>
 @{
     ViewData["Title"] = "Public Files";
+    double usedSpace = Model.Sum(file => file.Size);
+    double maxSpace = 250 * 1024 * 1024;
+
+    var usedSpacePct = Math.Floor(usedSpace / maxSpace * 100);
 }
 
 <div class="page-header">
@@ -24,6 +28,7 @@
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" href="#publicFileList">Public Files</a>
+                    <span class="pull-right label label-warning">@usedSpacePct %</span>
                 </h4>
             </div>
             <div id="publicFileList" class="panel-collapse list-group collapse in">

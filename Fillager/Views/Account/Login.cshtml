@@ -1,6 +1,5 @@
 @using Fillager.Models.Account
 @using Microsoft.AspNetCore.Identity
-
 @model Fillager.ViewModels.LoginViewModel
 
 @{
@@ -13,20 +12,20 @@
     <section>
         <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
             <h3>Use a local account to log in.</h3>
-            <hr />
+            <hr/>
 
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="UserName" class="col-md-2 control-label"></label>
                 <div class="col-md-10">
-                    <input asp-for="UserName" class="form-control" />
+                    <input asp-for="UserName" class="form-control"/>
                     <span asp-validation-for="UserName" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group">
                 <label asp-for="Password" class="col-md-2 control-label"></label>
                 <div class="col-md-10">
-                    <input asp-for="Password" class="form-control" />
+                    <input asp-for="Password" class="form-control"/>
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
             </div>
@@ -34,7 +33,7 @@
                 <div class="col-md-offset-2 col-md-10">
                     <div class="checkbox">
                         <label asp-for="RememberMe">
-                            <input asp-for="RememberMe" />
+                            <input asp-for="RememberMe"/>
                             @Html.DisplayNameFor(m => m.RememberMe)
                         </label>
                     </div>

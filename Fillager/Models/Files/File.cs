@@ -1,4 +1,5 @@
-﻿using Fillager.Models.Account;
+﻿using System;
+using Fillager.Models.Account;
 
 namespace Fillager.Models.Files
 {
@@ -9,5 +10,6 @@ namespace Fillager.Models.Files
         public long Size { get; set; }
         public virtual ApplicationUser OwnerGuid { get; set; }
         public bool IsPublic { get; set; }
+        public DateTime CreatedDateTime { get; set; }
     }
 }

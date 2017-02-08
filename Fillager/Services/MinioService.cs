@@ -12,9 +12,9 @@ namespace Fillager.Services
 {
     public class MinioService : IMinioService
     {
-        private const string MinioUrl = "http://minio:9000"; //= "http://192.168.1.20:9000/";
-        private const string AccessKey = "6b4535c9d0545e036d5b";
-        private const string SecretAccessKey = "f50a73124f5699570beb9ad44cd941";
+        private const string MinioUrl = "http://minio:9000"; //= "http://192.168.1.20:9000/";//todo env var from docker
+        private const string AccessKey = "6b4535c9d0545e036d5b"; //todo env var from docker
+        private const string SecretAccessKey = "f50a73124f5699570beb9ad44cd941"; //todo env var from docker
 
         /// <summary>
         ///     Uploads a stream to minio

@@ -80,8 +80,6 @@ namespace Fillager.Migrations
                 b.Property<string>("ConcurrencyStamp")
                     .IsConcurrencyToken();
 
-                b.Property<long>("DefaultStorage");
-
                 b.Property<string>("Name")
                     .HasMaxLength(256);
 
@@ -101,6 +99,8 @@ namespace Fillager.Migrations
             {
                 b.Property<string>("FileId")
                     .ValueGeneratedOnAdd();
+
+                b.Property<DateTime>("CreatedDateTime");
 
                 b.Property<string>("FileName");
 
