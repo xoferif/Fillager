@@ -4,7 +4,7 @@
     double usedSpace = Model.Sum(file => file.Size);
     double maxSpace = 250 * 1024 * 1024;
 
-    var usedSpacePct = Math.Floor((usedSpace / maxSpace) * 100);
+    var usedSpacePct = Math.Floor(usedSpace / maxSpace * 100);
 }
 
 <div class="page-header">
@@ -31,7 +31,7 @@
                     <span class="pull-right label label-warning">@usedSpacePct %</span>
                 </h4>
             </div>
-            <div id="publicFileList" class="panel-collapse list-group collapse in"> 
+            <div id="publicFileList" class="panel-collapse list-group collapse in">
                 @await Component.InvokeAsync("FileList", new {files = Model, editable = false, showPublicMarker = false})
             </div>
         </div>

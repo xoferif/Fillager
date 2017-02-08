@@ -1,7 +1,4 @@
-using System;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Fillager.Models.Account;
 using Fillager.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -24,6 +21,12 @@ namespace Fillager.Controllers
             _userManager = userManager;
             _loginManager = loginManager;
             _roleManager = roleManager;
+        }
+
+
+        public bool VerifyUser()
+        {
+            return User != null && _loginManager.IsSignedIn(User);
         }
 
         #region registration
@@ -117,11 +120,5 @@ namespace Fillager.Controllers
         }
 
         #endregion
-
-
-        public bool VerifyUser()
-        {
-            return User != null && _loginManager.IsSignedIn(User);
-        }
     }
 }

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Fillager.DataAccessLayer;
 using Fillager.Models.Account;
 using Fillager.Services;
-using Fillager.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -57,7 +56,7 @@ namespace Fillager.Controllers
         public IActionResult PublicFileList()
         {
             var publicFiles = _db.Files.Where(file => file.OwnerGuid == null && file.IsPublic).ToList();
-            return View("PublicTransferWindow",publicFiles);
+            return View("PublicTransferWindow", publicFiles);
         }
 
         #region actions (Upload, Download, Edit, Delete)
@@ -72,7 +71,8 @@ namespace Fillager.Controllers
                 ViewBag.Error = "not enough storage in the public drive";
                 return RedirectToAction("PublicFileList");
             }
-            if(_db.Files.Where(file => file.OwnerGuid == null && file.IsPublic).Sum(file => file.Size) + sumOfFiles >= PublicStorageLimit)
+            if (_db.Files.Where(file => file.OwnerGuid == null && file.IsPublic).Sum(file => file.Size) + sumOfFiles >=
+                PublicStorageLimit)
                 await FreeUpSpaceInPublicDrive(sumOfFiles);
 
 
@@ -81,27 +81,26 @@ namespace Fillager.Controllers
         }
 
         /// <summary>
-        /// removes public files from the db until the given space is made available
+        ///     removes public files from the db until the given space is made available
         /// </summary>
         /// <param name="spaceToFreeUp">space to remove</param>
         /// <returns></returns>
         private async Task FreeUpSpaceInPublicDrive(long spaceToFreeUp)
         {
             var filesToDelete = _db.Files
-                    .Where(file => file.OwnerGuid == null && file.IsPublic)
-                    .OrderBy(file => file.CreatedDateTime);
+                .Where(file => file.OwnerGuid == null && file.IsPublic)
+                .OrderBy(file => file.CreatedDateTime);
 
             while (spaceToFreeUp > 0)
             {
                 //todo magic number
-                var target = filesToDelete.Take(3).ToList();//take the 3 oldest files
+                var target = filesToDelete.Take(3).ToList(); //take the 3 oldest files
 
-                spaceToFreeUp -= target.Sum(file => file.Size);//subtract their size from the space still needed
+                spaceToFreeUp -= target.Sum(file => file.Size); //subtract their size from the space still needed
 
-                _db.Files.RemoveRange(target);//remove them
-
+                _db.Files.RemoveRange(target); //remove them
             }
-            
+
             await _db.SaveChangesAsync();
         }
 

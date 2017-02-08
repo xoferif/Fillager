@@ -11,7 +11,8 @@ namespace Fillager.ViewComponents
         private readonly SignInManager<UserIdentity> _loginManager;
         private readonly MenuDataRepository _menuDataRepository;
 
-        public NavigationMenuViewComponent(MenuDataRepository menuDataRepository, SignInManager<UserIdentity> loginManager)
+        public NavigationMenuViewComponent(MenuDataRepository menuDataRepository,
+            SignInManager<UserIdentity> loginManager)
         {
             _menuDataRepository = menuDataRepository;
             _loginManager = loginManager;
@@ -20,10 +21,10 @@ namespace Fillager.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync(int i)
         {
             ViewBag.MenuType = i;
-            bool loggedin = _loginManager.IsSignedIn(HttpContext.User);
+            var loggedin = _loginManager.IsSignedIn(HttpContext.User);
             //bool isAdmin = User.IsInRole("Admin");
-            bool isAdmin = true;
-            MenuItemListModel model = await _menuDataRepository.GetMenu(loggedin, i, isAdmin);
+            var isAdmin = true;
+            var model = await _menuDataRepository.GetMenu(loggedin, i, isAdmin);
             return View(model);
         }
     }

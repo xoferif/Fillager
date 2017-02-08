@@ -6,9 +6,9 @@
         @* ReSharper disable Html.TagNotResolved *@
         @foreach (var menuItem in Model.MenuItems.Where(m => m.ParentId == ViewBag.MenuType).ToList())
         {
-            <menulink controller-name="@menuItem.ControllerName" action-name="@menuItem.ActionName" menu-text="@menuItem.MenuItemText" menu-id="@menuItem.Id"  menu-type="@ViewBag.MenuType"></menulink>
+            <menulink controller-name="@menuItem.ControllerName" action-name="@menuItem.ActionName" menu-text="@menuItem.MenuItemText" menu-id="@menuItem.Id" menu-type="@ViewBag.MenuType"></menulink>
         }
         @* ReSharper restore Html.TagNotResolved *@
     </ul>
-   
+
 </div>

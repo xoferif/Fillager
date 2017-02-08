@@ -1,7 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Fillager.Controllers;
-using Fillager.Models.Account;
-using Microsoft.AspNetCore.Identity;
 
 namespace Fillager.Models.Menu
 {
@@ -21,24 +19,22 @@ namespace Fillager.Models.Menu
             MenuList = new MenuItemListModel();
             if (menutype == 0)
             {
-            MenuList.MenuItems.Add(new MenuItemModel(2, "Home", "Index", "Home", "Home", 0));
-            MenuList.MenuItems.Add(new MenuItemModel(3, "Help", "", "Home", "About", 0));
-            if (loggedIn)
-            {
-                MenuList.MenuItems.Add(new MenuItemModel(10, "Your Files", "PrivateFileList", "Fillager", "Your Files", 0));
-            }
-            MenuList.MenuItems.Add(new MenuItemModel(7, "Public Files", "PublicFileList", "Fillager", "Public Files", 0));
-            MenuList.MenuItems.Add(new MenuItemModel(4, "About", "About", "Home", "About", 3));
-            MenuList.MenuItems.Add(new MenuItemModel(5, "Contact Us", "Contact", "Home", "Contact", 3));  
+                MenuList.MenuItems.Add(new MenuItemModel(2, "Home", "Index", "Home", "Home", 0));
+                MenuList.MenuItems.Add(new MenuItemModel(3, "Help", "", "Home", "About", 0));
+                if (loggedIn)
+                    MenuList.MenuItems.Add(new MenuItemModel(10, "Your Files", "PrivateFileList", "Fillager",
+                        "Your Files", 0));
+                MenuList.MenuItems.Add(new MenuItemModel(7, "Public Files", "PublicFileList", "Fillager", "Public Files",
+                    0));
+                MenuList.MenuItems.Add(new MenuItemModel(4, "About", "About", "Home", "About", 3));
+                MenuList.MenuItems.Add(new MenuItemModel(5, "Contact Us", "Contact", "Home", "Contact", 3));
             }
             else if (menutype == 1)
             {
                 if (loggedIn)
                 {
                     if (isAdmin)
-                    {
                         MenuList.MenuItems.Add(new MenuItemModel(7, "Admin", "", "Admin", "Admin", 1));
-                    }
                     MenuList.MenuItems.Add(new MenuItemModel(8, "Log off", "LogOff", "Account", "Sign Up", 1));
                     MenuList.MenuItems.Add(new MenuItemModel(11, "Users", "About", "Home", "Users", 7));
                     MenuList.MenuItems.Add(new MenuItemModel(12, "Statistics", "Contact", "Home", "Statistics", 7));

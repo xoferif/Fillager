@@ -9,9 +9,9 @@
             <div class="clearfix panel list-group-item hoverable">
                 <span>@file.FileName</span>
                 @if (ViewBag.ShowPublicMarker)
+                {
+                    if (file.IsPublic)
                     {
-                        if (file.IsPublic)
-                        {
                         <span class="label label-danger" title="anyone can download this file">public</span>
                     }
                     else
