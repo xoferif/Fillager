@@ -7,7 +7,7 @@ namespace Fillager.Models.Files
         public string FileName { get; set; }
         public string FileId { get; set; }
         public long Size { get; set; }
-        public virtual UserIdentity OwnerGuid { get; set; }
+        public virtual ApplicationUser OwnerGuid { get; set; }
         public bool IsPublic { get; set; }
     }
 }

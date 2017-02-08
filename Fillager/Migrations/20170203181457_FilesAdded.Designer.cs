@@ -16,7 +16,7 @@ namespace Fillager.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.0-rtm-22752");
 
-            modelBuilder.Entity("Fillager.Models.Account.UserIdentity", b =>
+            modelBuilder.Entity("Fillager.Models.Account.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
@@ -205,7 +205,7 @@ namespace Fillager.Migrations
 
             modelBuilder.Entity("Fillager.Models.Files.File", b =>
                 {
-                    b.HasOne("Fillager.Models.Account.UserIdentity", "OwnerGuid")
+                    b.HasOne("Fillager.Models.Account.ApplicationUser", "OwnerGuid")
                         .WithMany("Files")
                         .HasForeignKey("OwnerGuidId");
                 });
@@ -220,7 +220,7 @@ namespace Fillager.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Fillager.Models.Account.UserIdentity")
+                    b.HasOne("Fillager.Models.Account.ApplicationUser")
                         .WithMany("Claims")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -228,7 +228,7 @@ namespace Fillager.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Fillager.Models.Account.UserIdentity")
+                    b.HasOne("Fillager.Models.Account.ApplicationUser")
                         .WithMany("Logins")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -241,7 +241,7 @@ namespace Fillager.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Fillager.Models.Account.UserIdentity")
+                    b.HasOne("Fillager.Models.Account.ApplicationUser")
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);

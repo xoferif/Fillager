@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Fillager.DataAccessLayer
 {
-    public class ApplicationDbContext : IdentityDbContext<UserIdentity, UserRole, string>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, UserRole, string>
     {
         public ApplicationDbContext(DbContextOptions options)
             : base(options)

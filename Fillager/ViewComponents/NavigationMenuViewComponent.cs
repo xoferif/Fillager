@@ -8,10 +8,10 @@ namespace Fillager.ViewComponents
 {
     public class NavigationMenuViewComponent : ViewComponent
     {
-        private readonly SignInManager<UserIdentity> _loginManager;
+        private readonly SignInManager<ApplicationUser> _loginManager;
         private readonly MenuDataRepository _menuDataRepository;
 
-        public NavigationMenuViewComponent(MenuDataRepository menuDataRepository, SignInManager<UserIdentity> loginManager)
+        public NavigationMenuViewComponent(MenuDataRepository menuDataRepository, SignInManager<ApplicationUser> loginManager)
         {
             _menuDataRepository = menuDataRepository;
             _loginManager = loginManager;
