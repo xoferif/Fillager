@@ -1,14 +1,14 @@
-﻿@model IEnumerable<Fillager.Models.Files.File>
+﻿@model Fillager.ViewModels.FileListViewModel
 
 
 <div class="list-group">
-    @if (Model.Any())
+    @if (Model.Files.Any())
     {
-        foreach (var file in Model)
+        foreach (var file in Model.Files)
         {
             <div class="clearfix panel list-group-item hoverable">
                 <span>@file.FileName</span>
-                @if (ViewBag.ShowPublicMarker)
+                @if (Model.ShowPublicMarker)
                 {
                     if (file.IsPublic)
                     {
@@ -27,7 +27,7 @@
                     <span class="btn btn-xs btn-info">
                         <span class="glyphicon glyphicon-link copyBtn" data-clipboard-text="@Url.Action("DownloadFile", "Fillager", null, "http")/@file.FileId"></span>
                     </span>
-                    @if (ViewBag.Editable)
+                    @if (Model.Editable)
                     {
                         <a asp-controller="Fillager"
                            asp-action="EditFilePopup"

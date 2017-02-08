@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Fillager.DataAccessLayer;
 using Fillager.Models.Account;
 using Fillager.Services;
+using Fillager.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -49,14 +50,37 @@ namespace Fillager.Controllers
             if (User.Identity.IsAuthenticated)
                 privateFiles = _db.Files.Where(file => file.OwnerGuid.Id == user.Id).ToList();
 
-            return View("PrivateTransferWindow", privateFiles);
+            var usedSpacePct = CalculateUsedPct(user.StorageUsed, DefaultStorage + user.StorageSpace);
+            
+            var viewmodel = new FileListViewModel(privateFiles)
+            { 
+                DiskUsedPct = usedSpacePct,
+                Editable = true,
+                ShowPublicMarker = true,
+                ShowDiskUsedPctMarker = true
+            };
+            
+            
+            return View("PrivateTransferWindow", viewmodel);
         }
+
+        private static int CalculateUsedPct(double used, double max) => Convert.ToInt32((used / max) * 100);
 
         [HttpGet]
         public IActionResult PublicFileList()
         {
             var publicFiles = _db.Files.Where(file => file.OwnerGuid == null && file.IsPublic).ToList();
-            return View("PublicTransferWindow", publicFiles);
+
+            var usedSpacePct = CalculateUsedPct(publicFiles.Sum(file => file.Size), PublicStorageLimit);
+
+            var viewmodel = new FileListViewModel(publicFiles)
+            {
+                DiskUsedPct = usedSpacePct,
+                ShowDiskUsedPctMarker = true
+            };
+
+            
+            return View("PublicTransferWindow", viewmodel);
         }
 
         #region actions (Upload, Download, Edit, Delete)
@@ -68,8 +92,7 @@ namespace Fillager.Controllers
             var sumOfFiles = files.Sum(file => file.Length);
             if (sumOfFiles > PublicStorageLimit)
             {
-                ViewBag.Error = "not enough storage in the public drive";
-                return RedirectToAction("PublicFileList");
+                return RedirectToAction("PublicFileList", "Fillager",new { error = "NotEnoughStorage" });
             }
             if (_db.Files.Where(file => file.OwnerGuid == null && file.IsPublic).Sum(file => file.Size) + sumOfFiles >=
                 PublicStorageLimit)
@@ -118,14 +141,39 @@ namespace Fillager.Controllers
 
             if (usedStorage + sumOfFiles > allowedStorage)
             {
-                ViewBag.Error = "not enough free storage";
-                return RedirectToAction("PrivateFileList");
+                return RedirectToAction("PrivateFileList", "Fillager", new {error = "NotEnoughStorage"});
+
             }
 
 
             await UploadTask(files, false);
+            await UpdateUsedSpaceForUser(user, sumOfFiles);
+            
             return RedirectToAction("PrivateFileList");
         }
+
+        public async Task UpdateUsedSpaceForUser(UserIdentity user, long additionalStorage)
+        {
+            user.StorageUsed += additionalStorage;
+            _db.Update(user);
+            await _db.SaveChangesAsync();
+
+            //recalculate sum of all the users files
+            
+            #pragma warning disable 4014
+            
+            var sumOfAllFiles = user.Files.Sum(file => file.Size);//why is this broken?
+            sumOfAllFiles = _db.Files.Where(file => file.OwnerGuid == user).Sum(file => file.Size);
+            if (sumOfAllFiles != user.StorageUsed)
+            {
+                user.StorageUsed = sumOfAllFiles;
+                _db.Update(user);
+                _db.SaveChangesAsync(); //fire and forget this event
+
+            }
+#pragma warning restore 4014
+        }
+
 
         private async Task UploadTask(IEnumerable<IFormFile> files, bool forcePublic)
         {
@@ -236,6 +284,7 @@ namespace Fillager.Controllers
             {
                 _db.Files.Remove(file);
                 _db.SaveChanges();
+                await UpdateUsedSpaceForUser(user, -file.Size);
                 return RedirectToAction("PrivateFileList");
             }
 
