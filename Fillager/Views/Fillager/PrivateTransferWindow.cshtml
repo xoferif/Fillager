@@ -29,6 +29,10 @@
                     <input type="submit" value="Upload Selected Files"/>
                 </form>*@
                 @await Component.InvokeAsync("FileUploadZone")
+                <div class="progress">
+                    <div class="bar progress-bar progress-bar-info"></div>
+                    <div class="percent">0%</div>
+                </div>
             </div>
         </div>
 
@@ -81,19 +85,46 @@
         });
 
     </script>
-    
+    <script src="http://malsup.github.com/jquery.form.js"></script>    
+    <script>
+        var bar = $('.bar');
+        var percent = $('.percent');
+        var status = $('#status');
+
+        $('#js-upload-form').ajaxForm({
+            beforeSend: function () {
+                status.empty();
+                var percentVal = '0%';
+                bar.width(percentVal);
+                percent.html(percentVal);
+            },
+            uploadProgress: function (event, position, total, percentComplete) {
+                var percentVal = percentComplete + '%';
+                bar.width(percentVal);
+                percent.html(percentVal);
+            },
+            success: function () {
+                var percentVal = '100%';
+                bar.width(percentVal);
+                percent.html(percentVal);
+            },
+            complete: function (xhr) {
+                status.html(xhr.responseText);
+            }
+        });
+    </script>
     <script>
         $(function () {
-            'use strict';
 
             // UPLOAD CLASS DEFINITION
             // ======================
 
             var dropZone = document.getElementById('drop-zone');
             var uploadForm = document.getElementById('js-upload-form');
+            var $form = $('js-upload-form');
 
             var startUpload = function (files) {
-                document.getElementById('js-upload-files').files = files;
+                document.getElementById('js-upload-files').files = files;//works for all except firefox and IE / edge
                 uploadForm.submit();
             };
             uploadForm.addEventListener('submit', function (e) {
