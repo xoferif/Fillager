@@ -7,6 +7,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="wwwroot\css\about.css" />
+    <Content Include="wwwroot\css\fileuploadzone.css" />
     <Content Include="wwwroot\css\flatly.bootstrap.min.css" />
     <Content Include="wwwroot\css\font-awesome.min.css" />
   </ItemGroup>

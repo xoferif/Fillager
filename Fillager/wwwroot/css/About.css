@@ -1,7 +1,6 @@
 ﻿.about {
-    background: #555;
     margin-bottom: 4em;
-    /*background: url(../images/title-bg.jpg) center no-repeat;*/
+    background: url(../images/title-bg.jpg) center no-repeat;
     /*background-size: cover;*/
     height: 80px;
 }

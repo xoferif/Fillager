@@ -83,6 +83,8 @@ namespace Fillager.Controllers
             return View("PublicTransferWindow", viewmodel);
         }
 
+        #endregion
+
         #region actions (Upload, Download, Edit, Delete)
 
         [HttpPost]
@@ -290,8 +292,6 @@ namespace Fillager.Controllers
 
             return Unauthorized();
         }
-
-        #endregion
 
         #endregion
     }
