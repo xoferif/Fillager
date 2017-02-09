@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using MySQL.Data.Entity.Extensions;
 
 namespace Fillager
@@ -27,7 +28,7 @@ namespace Fillager
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)  
         {
             // Add framework services.
             services.AddDbContext<ApplicationDbContext>(
@@ -43,17 +44,22 @@ namespace Fillager
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
             services.AddAuthorization(
                 authorizationOptions =>
                 {
                     authorizationOptions.AddPolicy("ElevatedRights", policy => policy.RequireRole("Admin"));
                 });
+
             services.AddMvc();
+
+            services.AddSingleton<IConfiguration>(Configuration);
 
             services.AddScoped<MenuDataRepository>();
             services.AddScoped<AccountController>();
             //Filelager services
             services.AddTransient<IMinioService, MinioService>();
+            services.AddScoped<IBackupQueueService, BackupQueueService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
