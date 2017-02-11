@@ -69,9 +69,8 @@ namespace Fillager.Controllers
         [HttpGet]
         public IActionResult PublicFileList()
         {
-            var publicFiles = _db.Files.Where(file => file.OwnerGuid == null && file.IsPublic).ToList();
-
-            var usedSpacePct = CalculateUsedPct(publicFiles.Sum(file => file.Size), PublicStorageLimit);
+            var publicFiles = _db.Files.Where(file => file.IsPublic).Include(file => file.OwnerGuid).ToList();
+            var usedSpacePct = CalculateUsedPct(publicFiles.Where(file => file.OwnerGuid == null).Sum(file => file.Size), PublicStorageLimit);
 
             var viewmodel = new FileListViewModel(publicFiles)
             {

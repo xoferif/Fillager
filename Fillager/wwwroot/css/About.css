@@ -1,8 +1,6 @@
 ﻿.about {
     margin-bottom: 4em;
     background: url(../images/title-bg.jpg) center no-repeat;
-    /*background-size: cover;*/
-    height: 80px;
 }
 
 .title-section {
@@ -19,7 +17,6 @@
 
 .highlight-info {
     background: url(../images/data.jpg) center fixed;
-    /*background-size: cover;*/
     color: #fff;
     padding: 6em 0;
 }
