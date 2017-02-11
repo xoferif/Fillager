@@ -1,114 +1,71 @@
-﻿.about {
-    margin-bottom: 4em;
-    background: url(../images/title-bg.jpg) center no-repeat;
-}
-
-.title-section {
-    position: relative;
-    padding: 60px 0 20px 0;
-}
-.title-section h1 {
-    margin: 0 0 5px 0;
-    line-height: 58px;
-    font-size: 34px;
-    font-weight: 500;
-    color: #555;
-}
-
-.highlight-info {
+﻿.highlight-info {
     background: url(../images/data.jpg) center fixed;
     color: #fff;
     padding: 6em 0;
 }
 
 .container {
-    margin-right: auto;
     margin-left: auto;
+    margin-right: auto;
     padding-left: 15px;
     padding-right: 15px;
 }
 
-.about_content {
-    padding: 1em 0 4em 0;
-}
-
-.about_content img {
-    padding: 0 20px 20px 0;
-    float: left;
-}
-
-.img-responsive {
-    display: block;
-    max-width: 100%;
-    height: auto;
-}
-
-img {
-    vertical-align: middle;
-}
-
-img {
-    border: 0;
-}
-
 p {
-    margin: 0;
     font-weight: 300;
+    margin: 0;
 }
 
-.text-center {
-    text-align: center;
-}
+.text-center { text-align: center; }
 
 .row {
     margin-left: -15px;
     margin-right: -15px;
 }
 
-.fa {
-    color: #2ABB9B;
-}
+.fa { color: #2ABB9B; }
 
 .carousel-indicators {
-    position: absolute;
     bottom: 10px;
     left: 50%;
-    z-index: 15;
-    width: 60%;
+    list-style: none;
     margin-left: -30%;
     padding-left: 0;
-    list-style: none;
+    position: absolute;
     text-align: center;
+    width: 60%;
+    z-index: 15;
 }
 
-.carousel-indicators {
-    bottom: -20px;
-}
+.carousel-indicators { bottom: -20px; }
 
 .carousel-indicators li {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    margin: 1px;
-    /*text-indent: -999px;*/
+    background-color: #000 \9;
+    background-color: rgba(0, 0, 0, 0);
     border: 1px solid #ffffff;
     border-radius: 10px;
     cursor: pointer;
-    background-color: #000 \9;
-    background-color: rgba(0,0,0,0);
+    display: inline-block;
+    height: 10px;
+    margin: 1px;
+    width: 10px;
 }
 
-ul, ol {
-    margin: 0;
+ul, ol { margin: 0; }
+
+.testimonial-solid {
+    background: #fff;
+    margin: 0 0 0 0;
+    padding-bottom: 70px;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 50px;
+    text-align: center;
 }
 
-.carousel-indicators li {
-    border: 1px solid #ccc;
-}
+.carousel-indicators li { border: 1px solid #ccc; }
 
-.carousel li {
-    margin-right: 5px;
-}
+.carousel li { margin-right: 5px; }
 
 .carousel-indicators .active {
     background-color: #ccc;
