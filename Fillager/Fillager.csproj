@@ -5,12 +5,12 @@
   <PropertyGroup>
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
   </PropertyGroup>
-  <ItemGroup>
+  <!--ItemGroup>
     <Content Include="wwwroot\css\about.css" />
     <Content Include="wwwroot\css\fileuploadzone.css" />
     <Content Include="wwwroot\css\flatly.bootstrap.min.css" />
     <Content Include="wwwroot\css\font-awesome.min.css" />
-  </ItemGroup>
+  </ItemGroup-->
   <ItemGroup>
     <PackageReference Include="AWSSDK.S3" Version="3.3.5.3" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0-beta1" />
@@ -27,6 +27,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="1.1.0-msbuild3-final" />
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+    <PackageReference Include="RabbitMQ.Client" Version="4.1.1" />
     <PackageReference Include="SapientGuardian.EntityFrameworkCore.MySql" Version="7.1.18" />
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,8 @@ version: '2'
 services:
   fillager:
     image: fillager
+    environment:
+      RABBITMQ_BACKUP_QUEUE: backup-queue-rabbitmq
     ports:
       - "80"
     build:
@@ -36,3 +38,11 @@ services:
       MYSQL_DATABASE: somedb
       MYSQL_USER: someuser
       MYSQL_PASSWORD: very_secret
+
+  backup-queue-rabbitmq:
+    image: rabbitmq:latest
+    hostname: backup-queue-rabbitmq
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+    ports:
+        - "5672:5672"

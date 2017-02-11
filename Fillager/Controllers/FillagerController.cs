@@ -22,15 +22,16 @@ namespace Fillager.Controllers
         private const int PublicStorageLimit = 250 * 1024 * 1024; //Todo ENNV var from docker
         private readonly ApplicationDbContext _db;
         private readonly IMinioService _minioService;
+        private readonly IBackupQueueService _backupQueueService;
 
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public FillagerController(UserManager<ApplicationUser>
-            userManager, SignInManager<ApplicationUser> signInManager, IMinioService minioService, ApplicationDbContext db)
+        public FillagerController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ApplicationDbContext db, IMinioService minioService, IBackupQueueService backupQueueService)
         {
             _userManager = userManager;
-            _minioService = minioService;
             _db = db;
+            _minioService = minioService;
+            _backupQueueService = backupQueueService;
         }
 
         private bool FileExists(string id)
@@ -197,6 +198,7 @@ namespace Fillager.Controllers
                 });
 
                 await _db.SaveChangesAsync();
+                _backupQueueService.SendBackupRequest("testbucket", id);
             }
         }
 
