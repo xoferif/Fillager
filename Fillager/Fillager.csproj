@@ -5,10 +5,8 @@
   <PropertyGroup>
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
   </PropertyGroup>
-  <ItemGroup>
-    <Content Include="wwwroot\css\contact.css" />
-  </ItemGroup>
   <!--ItemGroup>
+    <Content Include="wwwroot\css\contact.css" />
     <Content Include="wwwroot\css\about.css" />
     <Content Include="wwwroot\css\fileuploadzone.css" />
     <Content Include="wwwroot\css\flatly.bootstrap.min.css" />
