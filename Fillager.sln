@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26127.3
+VisualStudioVersion = 15.0.26206.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fillager", "Fillager\Fillager.csproj", "{3BAE0C20-CEDF-4D5F-AEA3-2430E30723B8}"
 EndProject
@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "proxy conf", "proxy conf", 
 		code\post-run-copy.sh = code\post-run-copy.sh
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject", "UnitTestProject\UnitTestProject.csproj", "{A87B336A-8806-4247-A15F-500B5A76899C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FillagerTests", "UnitTestProject\FillagerTests.csproj", "{A87B336A-8806-4247-A15F-500B5A76899C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
