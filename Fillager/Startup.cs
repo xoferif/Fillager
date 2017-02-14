@@ -69,6 +69,7 @@ namespace Fillager
             services.AddMvc();
 
             //add services to IoC container
+            MappingConfig.RegisterMaps();
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddTransient<IMinioService, MinioService>();
             services.AddScoped<IBackupQueueService, BackupQueueService>();
