@@ -1,15 +1,18 @@
-﻿using Fillager.Controllers;
+﻿using System.Linq;
+using System.Net;
+using Fillager.Controllers;
 using Fillager.DataAccessLayer;
 using Fillager.Models.Account;
 using Fillager.Models.Menu;
 using Fillager.Services;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using MySQL.Data.Entity.Extensions;
+using StackExchange.Redis;
 
 namespace Fillager
 {
@@ -30,10 +33,11 @@ namespace Fillager
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)  
         {
-            // Add framework services.
+            //add db connection
             services.AddDbContext<ApplicationDbContext>(
                 options => { options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")); });
 
+            //add identity/authentication service
             services.AddIdentity<ApplicationUser, UserRole>(identityOptions =>
                 {
                     identityOptions.Password.RequiredLength = 8;
@@ -45,22 +49,34 @@ namespace Fillager
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            //add authorization service
             services.AddAuthorization(
                 authorizationOptions =>
                 {
                     authorizationOptions.AddPolicy("ElevatedRights", policy => policy.RequireRole("Admin"));
                 });
 
+            //add redis identity key store for distributed identity support
+            var redisHost = Configuration.GetValue<string>("Redis:Host");
+            var redisPort = Configuration.GetValue<int>("Redis:Port");
+            var redisIpAddress = Dns.GetHostEntryAsync(redisHost).Result.AddressList.Last();
+            var redis = ConnectionMultiplexer.Connect($"{redisIpAddress}:{redisPort}");
+
+            services.AddDataProtection().PersistKeysToRedis(redis, "DataProtection-Keys");
+            services.AddOptions();
+
+            //add mvc support...
             services.AddMvc();
 
+            //add services to IoC container
             services.AddSingleton<IConfiguration>(Configuration);
-            MappingConfig.RegisterMaps();
+            services.AddTransient<IMinioService, MinioService>();
+            services.AddScoped<IBackupQueueService, BackupQueueService>();
+
 
             services.AddScoped<MenuDataRepository>();
             services.AddScoped<AccountController>();
-            //Filelager services
-            services.AddTransient<IMinioService, MinioService>();
-            services.AddScoped<IBackupQueueService, BackupQueueService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -11,6 +11,10 @@ services:
       context: ./Fillager
       dockerfile: Dockerfile
 
+  identity-redis:
+    image: redis
+
+
   reverseproxy:
     image: nginx:latest
     ports:
@@ -27,7 +31,14 @@ services:
     environment:
       MINIO_ACCESS_KEY: 6b4535c9d0545e036d5b
       MINIO_SECRET_KEY: f50a73124f5699570beb9ad44cd941
-    command: server /export
+    command: server http://minio/export1 http://minio/export2 http://minio2/export1 http://minio2/export2
+
+  minio2:
+    image: minio/minio
+    environment: 
+      MINIO_ACCESS_KEY: 6b4535c9d0545e036d5b
+      MINIO_SECRET_KEY: f50a73124f5699570beb9ad44cd941
+    command: server http://minio/export1 http://minio/export2 http://minio2/export1 http://minio2/export2
 
   mariadb:
     image: mariadb
