@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Fillager.DataAccessLayer;
 using Fillager.Models.Account;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Fillager.Controllers
 {
+    [Authorize]
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,9 +18,9 @@ namespace Fillager.Controllers
             _context = context;    
         }
 
-        public IActionResult Users()
+        public async Task<IActionResult> Users()
         {
-            return View();
+            return View(await _context.Users.ToListAsync());
         }
 
         public IActionResult Statistics()
@@ -29,53 +28,7 @@ namespace Fillager.Controllers
             return View();
         }
 
-        // GET: Admin
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Users.ToListAsync());
-        }
 
-        // GET: Admin/Details/5
-        public async Task<IActionResult> Details(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var applicationUser = await _context.Users
-                .SingleOrDefaultAsync(m => m.Id == id);
-            if (applicationUser == null)
-            {
-                return NotFound();
-            }
-
-            return View(applicationUser);
-        }
-
-        // GET: Admin/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Admin/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EarnedExtraStorage,PayedExtraStorage,OtherStorageBonus,StorageUsed,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] ApplicationUser applicationUser)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(applicationUser);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            return View(applicationUser);
-        }
-
-        // GET: Admin/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -88,71 +41,45 @@ namespace Fillager.Controllers
             {
                 return NotFound();
             }
-            return View(applicationUser);
+            return View("EditUser",applicationUser);
         }
-
-        // POST: Admin/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("EarnedExtraStorage,PayedExtraStorage,OtherStorageBonus,StorageUsed,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] ApplicationUser applicationUser)
+        public async Task<IActionResult> Edit(string id, [Bind("EarnedExtraStorage,PayedExtraStorage,OtherStorageBonus,UserName,Email,PhoneNumber,LockoutEnabled")] ApplicationUser applicationUser)
         {
-            if (id != applicationUser.Id)
+            if (!_context.Users.Any(user => user.Id == id))
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(applicationUser);
+
+            try
             {
-                try
+                //get object with all its fields from the database, and set the properties editable
+                var userobj = _context.Users.FirstOrDefault(user => user.Id == id);
+
+                userobj.EarnedExtraStorage = applicationUser.EarnedExtraStorage;
+                userobj.PayedExtraStorage = applicationUser.PayedExtraStorage;
+                userobj.OtherStorageBonus = applicationUser.OtherStorageBonus;
+                userobj.UserName = applicationUser.UserName;
+                userobj.Email = applicationUser.Email;
+                userobj.PhoneNumber = applicationUser.PhoneNumber;
+                userobj.LockoutEnabled = applicationUser.LockoutEnabled;
+
+                _context.Update(userobj);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ApplicationUserExists(applicationUser.Id))
                 {
-                    _context.Update(applicationUser);
-                    await _context.SaveChangesAsync();
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ApplicationUserExists(applicationUser.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction("Index");
+                throw;
             }
-            return View(applicationUser);
-        }
-
-        // GET: Admin/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var applicationUser = await _context.Users
-                .SingleOrDefaultAsync(m => m.Id == id);
-            if (applicationUser == null)
-            {
-                return NotFound();
-            }
-
-            return View(applicationUser);
-        }
-
-        // POST: Admin/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            var applicationUser = await _context.Users.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Users.Remove(applicationUser);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Users");
         }
 
         private bool ApplicationUserExists(string id)
