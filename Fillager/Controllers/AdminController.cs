@@ -63,7 +63,7 @@ namespace Fillager.Controllers
                 userobj.EarnedExtraStorage = applicationUser.EarnedExtraStorage;
                 userobj.PayedExtraStorage = applicationUser.PayedExtraStorage;
                 userobj.OtherStorageBonus = applicationUser.OtherStorageBonus;
-                userobj.UserName = applicationUser.UserName;
+                //userobj.UserName = applicationUser.UserName;
                 userobj.Email = applicationUser.Email;
                 userobj.PhoneNumber = applicationUser.PhoneNumber;
                 userobj.LockoutEnabled = applicationUser.LockoutEnabled;
