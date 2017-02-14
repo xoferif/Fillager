@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,7 +32,7 @@ namespace Fillager.Controllers
         // GET: Admin
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ApplicationUser.ToListAsync());
+            return View(await _context.Users.ToListAsync());
         }
 
         // GET: Admin/Details/5
@@ -43,7 +43,7 @@ namespace Fillager.Controllers
                 return NotFound();
             }
 
-            var applicationUser = await _context.ApplicationUser
+            var applicationUser = await _context.Users
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (applicationUser == null)
             {
@@ -83,7 +83,7 @@ namespace Fillager.Controllers
                 return NotFound();
             }
 
-            var applicationUser = await _context.ApplicationUser.SingleOrDefaultAsync(m => m.Id == id);
+            var applicationUser = await _context.Users.SingleOrDefaultAsync(m => m.Id == id);
             if (applicationUser == null)
             {
                 return NotFound();
@@ -134,7 +134,7 @@ namespace Fillager.Controllers
                 return NotFound();
             }
 
-            var applicationUser = await _context.ApplicationUser
+            var applicationUser = await _context.Users
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (applicationUser == null)
             {
@@ -149,15 +149,15 @@ namespace Fillager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var applicationUser = await _context.ApplicationUser.SingleOrDefaultAsync(m => m.Id == id);
-            _context.ApplicationUser.Remove(applicationUser);
+            var applicationUser = await _context.Users.SingleOrDefaultAsync(m => m.Id == id);
+            _context.Users.Remove(applicationUser);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
         private bool ApplicationUserExists(string id)
         {
-            return _context.ApplicationUser.Any(e => e.Id == id);
+            return _context.Users.Any(e => e.Id == id);
         }
     }
 }
