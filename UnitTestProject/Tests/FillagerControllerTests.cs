@@ -1,17 +1,17 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Xunit;
+
 namespace FillagerTests.Tests
 {
-    [TestClass]
     public class FillagerController
     {
-      [TestMethod]
+      [Fact]
       public void PrivateFileList()
       {
 
       }
 
-      [TestMethod]
+      [Fact]
       public void PublicFileList()
       {
       }

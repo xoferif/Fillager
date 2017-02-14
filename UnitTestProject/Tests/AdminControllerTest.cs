@@ -1,30 +1,30 @@
 using Fillager.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
+using Xunit.Sdk;
 
 namespace FillagerTests.Tests
 {
-  [TestClass]
   public class AdminControllerTest
   {
-    [TestMethod]
+    [Fact]
     public void Users()
     {
       AdminController controller = new AdminController();
 
       ViewResult result = controller.Users() as ViewResult;
 
-      Assert.IsNotNull(result);
+      Assert.IsType<ViewResult>(result);
     }
 
-    [TestMethod]
+    [Fact]
     public void Statistics()
     {
       AdminController controller = new AdminController();
 
       ViewResult result = controller.Statistics() as ViewResult;
 
-      Assert.IsNotNull(result);
+      Assert.IsType<ViewResult>(result);
     }
   }
 }

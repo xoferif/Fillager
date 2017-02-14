@@ -1,50 +1,51 @@
 using Fillager.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
+using Xunit.Sdk;
+using Assert = Xunit.Assert;
 
 namespace FillagerTests.Tests
 {
-  [TestClass]
   public class HomeControllerTest
   {
-    [TestMethod]
+    [Fact]
     public void Index()
     {
       HomeController controller = new HomeController();
 
       ViewResult result = controller.Index() as ViewResult;
 
-      Assert.IsNotNull(result);
+      Assert.IsType<ViewResult>(result);
     }
 
-    [TestMethod]
+    [Fact]
     public void About()
     {
       HomeController controller = new HomeController();
 
       ViewResult result = controller.About() as ViewResult;
 
-      Assert.IsNotNull(result);
+      Assert.IsType<ViewResult>(result);
     }
 
-    [TestMethod]
+    [Fact]
     public void Contact()
     {
       HomeController controller = new HomeController();
 
       ViewResult result = controller.Contact() as ViewResult;
 
-      Assert.IsNotNull(result);
+      Assert.IsType<ViewResult>(result);
     }
 
-    [TestMethod]
+    [Fact]
     public void Error()
     {
       HomeController controller = new HomeController();
 
       ViewResult result = controller.Error() as ViewResult;
 
-      Assert.IsNotNull(result);
+      Assert.IsType<ViewResult>(result);
     }
   }
 }

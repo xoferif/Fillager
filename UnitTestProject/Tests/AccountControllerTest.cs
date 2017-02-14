@@ -6,15 +6,14 @@ using Fillager.Models.Account;
 using Fillager.ViewModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Xunit;
 using Xunit.Sdk;
-using Assert = Xunit.Assert;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace FillagerTests.Tests
 {
@@ -23,8 +22,12 @@ namespace FillagerTests.Tests
     [Fact]
     public void ReturnRegisterView()
     {
-      // Arrange mock for userManager
+      // Arrange
+      var dummyUser = new ApplicationUser() { UserName = "ed", Email = "testc@test.dk", StorageUsed = 0 };
+      var cancelToken = new CancellationTokenSource();
       var mockIuserStore = new Mock<IUserStore<ApplicationUser>>();
+      mockIuserStore.Setup(x => x.CreateAsync(dummyUser, cancelToken.Token))
+                .Returns(Task.FromResult(IdentityResult.Success));
       var mockIOptions = new Mock<IOptions<IdentityOptions>>();
       var mockIPasswordHasher = new Mock<IPasswordHasher<ApplicationUser>>();
       var mockIUserValidator = new Mock<IEnumerable<IUserValidator<ApplicationUser>>>();
@@ -38,8 +41,9 @@ namespace FillagerTests.Tests
       var mockRoleManager = new Mock<RoleManager<UserRole>>();
       var userManager = new UserManager<ApplicationUser>(mockIuserStore.Object, mockIOptions.Object, mockIPasswordHasher.Object, mockIUserValidator.Object, mockIPassValidator.Object, mockILookupNormalizer.Object, mockIdentityErrorDescriber.Object, mockIServiceProvider.Object, mockILogger.Object);
       AccountController controller = new AccountController(userManager, mockSigninManager.Object, mockRoleManager.Object);
-      
+
       // Act
+      //Task<IdentityResult> tt = (Task<IdentityResult>)mockIuserStore.Object.CreateAsync(dummyUser);
       var result = controller.Register();
 
       // Assert
