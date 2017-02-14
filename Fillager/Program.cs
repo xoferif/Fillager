@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using AutoMapper;
+using Fillager.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 
 namespace Fillager
@@ -14,7 +16,6 @@ namespace Fillager
                 .UseStartup<Startup>()
                 .UseApplicationInsights()
                 .Build();
-
 
             host.Run();
         }

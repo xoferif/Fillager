@@ -5,8 +5,9 @@ namespace Fillager.ViewComponents
 {
     public class FileUploadZoneViewComponent : ViewComponent
     {
-        public async Task<IViewComponentResult> InvokeAsync()
+        public async Task<IViewComponentResult> InvokeAsync(string type)
         {
+            ViewBag.UploadType = type;
             return View();
         }
     }

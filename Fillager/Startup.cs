@@ -54,6 +54,7 @@ namespace Fillager
             services.AddMvc();
 
             services.AddSingleton<IConfiguration>(Configuration);
+            MappingConfig.RegisterMaps();
 
             services.AddScoped<MenuDataRepository>();
             services.AddScoped<AccountController>();

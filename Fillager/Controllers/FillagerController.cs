@@ -52,16 +52,18 @@ namespace Fillager.Controllers
                 privateFiles = _db.Files.Where(file => file.OwnerGuid.Id == user.Id).ToList();
 
             var usedSpacePct = CalculateUsedPct(user.StorageUsed, DefaultStorage + user.StorageSpace);
-            
-            var viewmodel = new FileListViewModel(privateFiles)
-            { 
+
+            var mappedFiles = AutoMapper.Mapper.Map<List<File>, List<FileViewModel>>(privateFiles);
+
+            var viewmodel = new FileListViewModel(mappedFiles)
+            {
                 DiskUsedPct = usedSpacePct,
                 Editable = true,
                 ShowPublicMarker = true,
                 ShowDiskUsedPctMarker = true
             };
-            
-            
+
+
             return View("PrivateTransferWindow", viewmodel);
         }
 
@@ -73,13 +75,15 @@ namespace Fillager.Controllers
             var publicFiles = _db.Files.Where(file => file.IsPublic).Include(file => file.OwnerGuid).ToList();
             var usedSpacePct = CalculateUsedPct(publicFiles.Where(file => file.OwnerGuid == null).Sum(file => file.Size), PublicStorageLimit);
 
-            var viewmodel = new FileListViewModel(publicFiles)
+            var mappedFiles = AutoMapper.Mapper.Map<List<File>, List<FileViewModel>>(publicFiles);
+
+            var viewmodel = new FileListViewModel(mappedFiles)
             {
                 DiskUsedPct = usedSpacePct,
                 ShowDiskUsedPctMarker = true
             };
 
-            
+
             return View("PublicTransferWindow", viewmodel);
         }
 
@@ -94,7 +98,7 @@ namespace Fillager.Controllers
             var sumOfFiles = files.Sum(file => file.Length);
             if (sumOfFiles > PublicStorageLimit)
             {
-                return RedirectToAction("PublicFileList", "Fillager",new { error = "NotEnoughStorage" });
+                return RedirectToAction("PublicFileList", "Fillager", new { error = "NotEnoughStorage" });
             }
             if (_db.Files.Where(file => file.OwnerGuid == null && file.IsPublic).Sum(file => file.Size) + sumOfFiles >=
                 PublicStorageLimit)
@@ -143,14 +147,14 @@ namespace Fillager.Controllers
 
             if (usedStorage + sumOfFiles > allowedStorage)
             {
-                return RedirectToAction("PrivateFileList", "Fillager", new {error = "NotEnoughStorage"});
+                return RedirectToAction("PrivateFileList", "Fillager", new { error = "NotEnoughStorage" });
 
             }
 
 
             await UploadTask(files, false);
             await UpdateUsedSpaceForUser(user, sumOfFiles);
-            
+
             return RedirectToAction("PrivateFileList");
         }
 
@@ -161,9 +165,9 @@ namespace Fillager.Controllers
             await _db.SaveChangesAsync();
 
             //recalculate sum of all the users files
-            
-            #pragma warning disable 4014
-            
+
+#pragma warning disable 4014
+
             var sumOfAllFiles = user.Files.Sum(file => file.Size);//why is this broken?
             sumOfAllFiles = _db.Files.Where(file => file.OwnerGuid == user).Sum(file => file.Size);
             if (sumOfAllFiles != user.StorageUsed)
@@ -292,6 +296,27 @@ namespace Fillager.Controllers
             }
 
             return Unauthorized();
+        }
+
+        public async Task<IActionResult> DeleteFiles(string[] checkbox)
+        {
+            foreach (string fileId in checkbox)
+            {
+                var file = await _db.Files.FindAsync(fileId);
+                var user = await _userManager.GetUserAsync(User);
+
+                if (file.OwnerGuid != null && file.OwnerGuid == user)
+                {
+                    _db.Files.Remove(file);
+                    _db.SaveChanges();
+                    await UpdateUsedSpaceForUser(user, -file.Size);
+                }
+                else
+                {
+                    return Unauthorized();
+                }
+            }
+            return RedirectToAction("PrivateFileList");
         }
 
         #endregion

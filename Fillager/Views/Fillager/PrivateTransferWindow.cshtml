@@ -6,7 +6,7 @@
 
 <div class="page-header">
     <h3>Your Files</h3>
-    <hr/>
+    <hr />
     @{
         StringValues error;
         if (Context.Request.Query.TryGetValue("error", out error))
@@ -21,14 +21,7 @@
         <div class="panel panel-primary">
             <div class="panel-heading">Upload Files</div>
             <div class="panel-group">
-                @*<form asp-action="UploadPrivateFiles"
-                      asp-controller="Fillager"
-                      method="post"
-                      enctype="multipart/form-data">
-                    <input type="file" name="files" multiple/>
-                    <input type="submit" value="Upload Selected Files"/>
-                </form>*@
-                @await Component.InvokeAsync("FileUploadZone")
+                @await Component.InvokeAsync("FileUploadZone", "UploadPrivateFiles")
                 <div class="progress">
                     <div class="bar progress-bar progress-bar-info"></div>
                     <div class="percent">0%</div>
@@ -36,20 +29,27 @@
             </div>
         </div>
 
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#privateFileList">Your Files</a>
-                    @if (Model.ShowDiskUsedPctMarker)
-                    {
-                        <span class="pull-right label label-warning">@Model.DiskUsedPct %</span>
-                    }
-                </h4>
+        <form asp-action="" asp-controller="Fillager" method="post">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#privateFileList">Your Files</a>
+                        @if (Model.ShowDiskUsedPctMarker)
+                        {
+                            <span class="label label-warning">@Model.DiskUsedPct %</span>
+                        }
+                        <span class="pull-right">
+                            <input type="submit" class="btn-info" value="Download" id="DownloadMultiple" />
+                            <input type="submit" class="btn-info" value="Delete" formaction="DeleteFiles" />
+                            <input type="checkbox" class="check" id="checkAll">
+                        </span>
+                    </h4>
+                </div>
+                <div id="privateFileList" class="panel-collapse collapse in">
+                    @await Component.InvokeAsync("FileList", Model)
+                </div>
             </div>
-            <div id="privateFileList" class="panel-collapse collapse in">
-                @await Component.InvokeAsync("FileList", Model)
-            </div>
-        </div>
+        </form>
     </div>
 </div>
 
@@ -63,7 +63,18 @@
 
 
 <style>
-    .hoverable:hover { background-color: #ecf0f1; }
+    .hoverable:hover {
+        background-color: #ecf0f1;
+    }
+
+    input[type=checkbox] {
+        -moz-transform: scale(2); /* FF */
+        /* Double-sized Checkboxes */
+        -ms-transform: scale(2); /* IE */
+        -o-transform: scale(2); /* Opera */
+        -webkit-transform: scale(1.75); /* Safari and Chrome */
+        margin-left: 10px;
+    }
 </style>
 @section Scripts
 {
@@ -73,10 +84,10 @@
     </script>
 
     <script>
-        $(function() {
+        $(function () {
             // when the modal is closed
             $('#modal-container').on('hidden.bs.modal',
-                function() {
+                function () {
                     // remove the bs.modal data attribute from it
                     $(this).removeData('bs.modal');
                     // and empty the modal-content element
@@ -85,7 +96,7 @@
         });
 
     </script>
-    <script src="http://malsup.github.com/jquery.form.js"></script>    
+    <script src="http://malsup.github.com/jquery.form.js"></script>
     <script>
         var bar = $('.bar');
         var percent = $('.percent');
@@ -124,13 +135,14 @@
             var $form = $('js-upload-form');
 
             var startUpload = function (files) {
-                document.getElementById('js-upload-files').files = files;//works for all except firefox and IE / edge
+                document.getElementById('js-upload-files').files = files; //works for all except firefox and IE / edge
                 uploadForm.submit();
             };
-            uploadForm.addEventListener('submit', function (e) {
-                var uploadFiles = document.getElementById('js-upload-files').files;
-                startUpload(uploadFiles);
-            });
+            uploadForm.addEventListener('submit',
+                function (e) {
+                    var uploadFiles = document.getElementById('js-upload-files').files;
+                    startUpload(uploadFiles);
+                });
             dropZone.ondrop = function (e) {
                 e.preventDefault();
                 this.className = 'upload-drop-zone';
@@ -147,4 +159,27 @@
             };
         });
     </script>
+    <script>
+        $("#checkAll").click(function () {
+            $(".check").prop('checked', $(this).prop('checked'));
+        });
+    </script>
+    <script>
+        $("#DownloadMultiple").click(function (e) {
+            e.preventDefault();
+            var someVar = $(".check:checked");
+            someVar.each(function (key, value) {
+                var fileId = value.value;
+                var fileAnchor = $("#file-dl-" + fileId);
+                setTimeout(
+                    function () {
+                        fileAnchor[0].click();
+                    },
+                    key * 1500
+                    //TODO: Create a proper Deferred / Promise function so as to ensure that all files get downloaded
+                );
+            });
+        });
+    </script>
+
 }
