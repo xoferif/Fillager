@@ -39,7 +39,7 @@ namespace FillagerTests.Tests
 
       var mockSigninManager = new Mock<SignInManager<ApplicationUser>>();
       var mockRoleManager = new Mock<RoleManager<UserRole>>();
-      mockRoleManager.Setup(x => x.GetClaimsAsync(new UserRole { Name = "admin"  })).Returns(Task.)
+      //mockRoleManager.Setup(x => x.GetClaimsAsync(new UserRole { Name = "admin"  })).Returns(Task.)
       var userManager = new UserManager<ApplicationUser>(mockIuserStore.Object, mockIOptions.Object, mockIPasswordHasher.Object, mockIUserValidator.Object, mockIPassValidator.Object, mockILookupNormalizer.Object, mockIdentityErrorDescriber.Object, mockIServiceProvider.Object, mockILogger.Object);
       AccountController controller = new AccountController(userManager, mockSigninManager.Object, mockRoleManager.Object);
 
