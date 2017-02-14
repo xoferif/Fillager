@@ -23,10 +23,10 @@ namespace FillagerTests.Tests
     public void ReturnRegisterView()
     {
       // Arrange
-      var dummyUser = new ApplicationUser() { UserName = "ed", Email = "testc@test.dk", StorageUsed = 0 };
+      var dummyUser = new ApplicationUser { UserName = "ed", Email = "testc@test.dk", StorageUsed = 0 };
       var cancelToken = new CancellationTokenSource();
       var mockIuserStore = new Mock<IUserStore<ApplicationUser>>();
-      mockIuserStore.Setup(x => x.CreateAsync(dummyUser, cancelToken.Token))
+      mockIuserStore.Setup(x => x.UpdateAsync(dummyUser, cancelToken.Token))
                 .Returns(Task.FromResult(IdentityResult.Success));
       var mockIOptions = new Mock<IOptions<IdentityOptions>>();
       var mockIPasswordHasher = new Mock<IPasswordHasher<ApplicationUser>>();
@@ -39,6 +39,7 @@ namespace FillagerTests.Tests
 
       var mockSigninManager = new Mock<SignInManager<ApplicationUser>>();
       var mockRoleManager = new Mock<RoleManager<UserRole>>();
+      mockRoleManager.Setup(x => x.GetClaimsAsync(new UserRole { Name = "admin"  })).Returns(Task.)
       var userManager = new UserManager<ApplicationUser>(mockIuserStore.Object, mockIOptions.Object, mockIPasswordHasher.Object, mockIUserValidator.Object, mockIPassValidator.Object, mockILookupNormalizer.Object, mockIdentityErrorDescriber.Object, mockIServiceProvider.Object, mockILogger.Object);
       AccountController controller = new AccountController(userManager, mockSigninManager.Object, mockRoleManager.Object);
 
