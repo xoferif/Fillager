@@ -5,10 +5,9 @@ namespace Fillager.ViewComponents
 {
     public class FileUploadZoneViewComponent : ViewComponent
     {
-#pragma warning disable 1998
-        public async Task<IViewComponentResult> InvokeAsync()
-#pragma warning restore 1998
+        public IViewComponentResult Invoke(string type)
         {
+            ViewBag.UploadType = type;
             return View();
         }
     }

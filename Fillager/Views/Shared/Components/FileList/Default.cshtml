@@ -9,9 +9,9 @@
             <div class="clearfix panel list-group-item hoverable">
                 <span>@file.FileName</span>
                 @if (Model.ShowPublicMarker)
-                {
-                    if (file.IsPublic)
                     {
+                        if (file.IsPublic)
+                        {
                         <span class="label label-danger" title="anyone can download this file">public</span>
                     }
                     else
@@ -21,7 +21,7 @@
                 }
 
                 <span class="pull-right">
-                    <a id="file-dl-@file.FileId" asp-controller="Fillager" asp-action="DownloadFile" asp-route-id="@file.FileId" class="btn btn-xs btn-info">
+                    <a id="file-dl-@file.FileId" asp-controller="Fillager" asp-action="DownloadFile" asp-route-id="@file.FileId" class="btn btn-xs btn-info" download>
                         <span class="glyphicon glyphicon-download-alt"></span>
                     </a>
                     <span class="btn btn-xs btn-info">
@@ -38,15 +38,16 @@
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
 
-                        <a asp-controller="Fillager"
-                           asp-action="DeletePopup"
-                           asp-route-fileId="@file.FileId"
-                           data-target="#modal-container"
-                           data-toggle="modal"
-                           class="btn btn-xs btn-danger">
-                            <span class="glyphicon glyphicon-trash"></span>
-                        </a>
+                            <a asp-controller="Fillager"
+                               asp-action="DeletePopup"
+                               asp-route-fileId="@file.FileId"
+                               data-target="#modal-container"
+                               data-toggle="modal"
+                               class="btn btn-xs btn-danger">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </a>
                     }
+                    <input name="checkbox" value="@file.FileId" class="check" type="checkbox">
                 </span>
 
             </div>

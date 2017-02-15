@@ -21,30 +21,36 @@
         <div class="panel panel-primary">
             <div class="panel-heading">Upload Files</div>
             <div class="panel-group">
-                <form asp-action="UploadPublicFiles"
-                      asp-controller="Fillager"
-                      method="post"
-                      enctype="multipart/form-data">
-                    <input type="file" name="files" multiple/>
-                    <input type="submit" value="Upload Selected Files"/>
-                </form>
+                @await Component.InvokeAsync("FileUploadZone", "UploadPublicFiles")
+                <div class="progress">
+
+                    <div class="bar progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                        <div class="percent">0%</div>
+                    </div>                   
+                </div>
             </div>
         </div>
 
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#publicFileList">Public Files</a>
-                    @if (Model.ShowDiskUsedPctMarker)
-                    {
-                        <span class="pull-right label label-warning">@Model.DiskUsedPct %</span>
-                    }
-                </h4>
+        <form asp-action="" asp-controller="Fillager" method="post">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#publicFileList">Public Files</a>
+                        @if (Model.ShowDiskUsedPctMarker)
+                        {
+                            <span class="label label-warning">@Model.DiskUsedPct %</span>
+                        }
+                        <span class="pull-right">
+                            <input type="submit" class="btn-info" value="Download" id="DownloadMultiple"/>
+                            <input type="checkbox" class="check" id="checkAll">
+                        </span>
+                    </h4>
+                </div>
+                <div id="publicFileList" class="panel-collapse collapse in">
+                    @await Component.InvokeAsync("FileList", Model)
+                </div>
             </div>
-            <div id="publicFileList" class="panel-collapse collapse in">
-                @await Component.InvokeAsync("FileList", Model)
-            </div>
-        </div>
+        </form>
     </div>
 </div>
 
@@ -56,10 +62,21 @@
     </div>
 </div>
 
-
+<!--hover effect-->
 <style>
     .hoverable:hover { background-color: #ecf0f1; }
+
+    input [type=checkbox] {
+        -moz-transform: scale(2); /* FF */
+        /* Double-sized Checkboxes */
+        -ms-transform: scale(2); /* IE */
+        -o-transform: scale(2); /* Opera */
+        -webkit-transform: scale(1.75); /* Safari and Chrome */
+        margin-left: 10px;
+    }
 </style>
+
+<!--copy link from list-->
 @section Scripts
 {
     <script src="https://cdn.jsdelivr.net/clipboard.js/1.5.16/clipboard.min.js"></script>
@@ -67,6 +84,7 @@
         new Clipboard('.copyBtn');
     </script>
 
+    <!--on modal close clear the data in it to prevent caching its content-->
     <script>
         $(function() {
             // when the modal is closed
@@ -79,4 +97,95 @@
                 });
         });
     </script>
-}
+
+    <!--simple dropzone with progress bar-->
+    <script src="http://malsup.github.com/jquery.form.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.css"/>
+    <script>
+        var dropZone = document.getElementById('drop-zone');
+        var uploadForm = document.getElementById('js-upload-form');
+        var __RequestVerificationToken = uploadForm.elements["__RequestVerificationToken"].value;
+
+        var bar = $('.bar');
+        var percent = $('.percent');
+        var status = $('#status');
+
+
+        $('#js-upload-form').ajaxForm({
+            beforeSend: function() {
+                status.empty();
+                var percentVal = '0%';
+                bar.width(percentVal);
+                percent.html(percentVal);
+            },
+            uploadProgress: function(event, position, total, percentComplete) {
+                var percentVal = percentComplete + '%';
+                bar.width(percentVal);
+                percent.html(percentVal);
+            },
+            success: function() {
+                var percentVal = '100%';
+                bar.width(percentVal);
+                percent.html(percentVal);
+            },
+            complete: function(xhr) {
+                location.reload();
+            }
+        });
+
+        var myDropzone = new Dropzone("#drop-zone",
+        {
+            url: uploadForm.action,
+            maxFilesize: 250,
+            paramName: 'files',
+            previewTemplate: '<div></div>',
+            addRemoveLinks: false
+        });
+
+        myDropzone.on('sending',
+            function(file, xhr, formData) {
+                formData.append("__RequestVerificationToken", __RequestVerificationToken);
+            }
+        );
+
+        myDropzone.on("totaluploadprogress",
+            function(totalPercentage, totalBytesToBeSent, totalBytesSent) {
+                var bar = $('.bar');
+                var percent = $('.percent');
+                var percentVal = totalPercentage + '%';
+                bar.width(percentVal);
+                percent.html(Math.floor(totalPercentage) + '%');
+            });
+        myDropzone.on("queuecomplete",
+            function(file) {
+                $('.bar').width(0);
+                location.reload();
+            });
+
+
+    </script>
+
+    <!--multi download select all checkbox-->
+    <script>
+        $("#checkAll").click(function() {
+            $(".check").prop('checked', $(this).prop('checked'));
+        });
+    </script>
+
+    <!--multi download feature-->
+    <script>
+        $("#DownloadMultiple").click(function(e) {
+            e.preventDefault();
+            var someVar = $(".check:checked");
+
+            someVar.each(function(key, value) {
+                var fileId = value.value;
+                var fileAnchor = $("#file-dl-" + fileId);
+                if (fileAnchor != null && fileAnchor[0] != null) {
+                    fileAnchor[0].click();
+                }
+            });
+        });
+    </script>
+})

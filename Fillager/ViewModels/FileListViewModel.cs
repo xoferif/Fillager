@@ -9,12 +9,12 @@ namespace Fillager.ViewModels
 {
     public class FileListViewModel
     {
-        public FileListViewModel(IList<File> files)
+        public FileListViewModel(IList<FileViewModel> files)
         {
             Files = files;
         }
 
-        public IList<File> Files { get; set; }
+        public IList<FileViewModel> Files { get; set; }
         public bool Editable { get; set; } = false;
         public bool ShowPublicMarker { get; set; } = false;
         public int DiskUsedPct { get; set; } = 0;

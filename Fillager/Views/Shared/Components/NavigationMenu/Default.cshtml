@@ -3,12 +3,12 @@
 <div class="navbar-collapse collapse">
     <ul class="nav navbar-nav">
 
-        @* ReSharper disable Html.TagNotResolved *@
         @foreach (var menuItem in Model.MenuItems.Where(m => m.ParentId == ViewBag.MenuType).ToList())
         {
+            @* ReSharper disable Html.TagNotResolved *@
             <menulink controller-name="@menuItem.ControllerName" action-name="@menuItem.ActionName" menu-text="@menuItem.MenuItemText" menu-id="@menuItem.Id" menu-type="@ViewBag.MenuType"></menulink>
+            @* ReSharper restore Html.TagNotResolved *@
         }
-        @* ReSharper restore Html.TagNotResolved *@
     </ul>
 
 </div>
