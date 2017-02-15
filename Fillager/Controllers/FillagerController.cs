@@ -98,12 +98,15 @@ namespace Fillager.Controllers
             var sumOfFiles = files.Sum(file => file.Length);
             if (sumOfFiles > PublicStorageLimit)
             {
-                return RedirectToAction("PublicFileList", "Fillager", new { error = "NotEnoughStorage" });
+                return RedirectToAction("PublicFileList", "Fillager", new {error = "NotEnoughStorage"});
             }
-            if (_db.Files.Where(file => file.OwnerGuid == null && file.IsPublic).Sum(file => file.Size) + sumOfFiles >=
+            var usedStorage = _db.Files.Where(file => file.OwnerGuid == null && file.IsPublic).Sum(file => file.Size);
+            if (usedStorage + sumOfFiles >=
                 PublicStorageLimit)
-                await FreeUpSpaceInPublicDrive(sumOfFiles);
-
+            {
+                var availableStorage = PublicStorageLimit - usedStorage;
+                await FreeUpSpaceInPublicDrive(sumOfFiles - availableStorage);
+            }
 
             await UploadTask(files, true);
             return RedirectToAction("PublicFileList");
@@ -122,7 +125,6 @@ namespace Fillager.Controllers
 
             while (spaceToFreeUp > 0)
             {
-                //todo magic number
                 var target = filesToDelete.Take(3).ToList(); //take the 3 oldest files
 
                 spaceToFreeUp -= target.Sum(file => file.Size); //subtract their size from the space still needed
