@@ -149,15 +149,16 @@ namespace Fillager.Controllers
 
             if (usedStorage + sumOfFiles > allowedStorage)
             {
-                return RedirectToAction("PrivateFileList", "Fillager", new { error = "NotEnoughStorage" });
+                return Json(new {error = "Not enough free storage"});
+                //return RedirectToAction("PrivateFileList", "Fillager", new { error = "NotEnoughStorage" });
 
             }
 
 
             await UploadTask(files, false);
             await UpdateUsedSpaceForUser(user, sumOfFiles);
-
-            return RedirectToAction("PrivateFileList");
+            return Ok();
+            //return RedirectToAction("PrivateFileList");
         }
 
         public async Task UpdateUsedSpaceForUser(ApplicationUser user, long additionalStorage)

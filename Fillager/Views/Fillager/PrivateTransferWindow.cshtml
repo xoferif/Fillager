@@ -7,15 +7,9 @@
 <div class="page-header">
     <h3>Your Files</h3>
     <hr />
-    @{
-        StringValues error;
-        if (Context.Request.Query.TryGetValue("error", out error))
-        {
-            <div class="alert alert-danger">
-                @error
-            </div>
-        }
-    }
+    <div id="errorbox" style="display: none" class="alert alert-danger">
+                
+    </div>
 
     <div class="panel-group">
         <div class="panel panel-primary">
@@ -131,8 +125,14 @@
                 bar.width(percentVal);
                 percent.html(percentVal);
             },
-            complete: function(xhr) {
-                location.reload();
+            complete: function (xhr) {
+                if (xhr != null && xhr.responseJSON && xhr.responseJSON.error) {
+                    error = xhr.responseJSON.error;
+                    $("#errorbox").css("display", "block");
+                    $("#errorbox").html(xhr.responseJSON.error);
+                } else {
+                    location.reload();
+                }
             }
         });
 
@@ -159,10 +159,21 @@
                 bar.width(percentVal);
                 percent.html(Math.floor(totalPercentage) + '%');
             });
+        var error = null;
+        myDropzone.on("success",
+            function(file, responseText) {
+                if (responseText != null && responseText.error != null) {
+                    error = responseText.error;
+                    $("#errorbox").css("display", "block");
+                    $("#errorbox").html(responseText.error);
+                }
+            });
         myDropzone.on("queuecomplete",
-            function(file) {
+            function() {
                 $('.bar').width(0);
-                location.reload();
+                if (!error) {
+                    location.reload();
+                }
             });
 
 
