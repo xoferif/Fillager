@@ -99,6 +99,7 @@
     </script>
 
     <!--simple dropzone with progress bar-->
+    <script src="http://malsup.github.com/jquery.form.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.css"/>
     <script>
@@ -106,11 +107,37 @@
         var uploadForm = document.getElementById('js-upload-form');
         var __RequestVerificationToken = uploadForm.elements["__RequestVerificationToken"].value;
 
+        var bar = $('.bar');
+        var percent = $('.percent');
+        var status = $('#status');
+
+
+        $('#js-upload-form').ajaxForm({
+            beforeSend: function() {
+                status.empty();
+                var percentVal = '0%';
+                bar.width(percentVal);
+                percent.html(percentVal);
+            },
+            uploadProgress: function(event, position, total, percentComplete) {
+                var percentVal = percentComplete + '%';
+                bar.width(percentVal);
+                percent.html(percentVal);
+            },
+            success: function() {
+                var percentVal = '100%';
+                bar.width(percentVal);
+                percent.html(percentVal);
+            },
+            complete: function(xhr) {
+                location.reload();
+            }
+        });
+
         var myDropzone = new Dropzone("#drop-zone",
         {
             url: uploadForm.action,
             maxFilesize: 250,
-            addRemoveLinks: true,
             paramName: 'files',
             previewTemplate: '<div></div>',
             addRemoveLinks: false
@@ -128,7 +155,7 @@
                 var percent = $('.percent');
                 var percentVal = totalPercentage + '%';
                 bar.width(percentVal);
-                percent.html(Math.floor(totalPercentage)+ '%');
+                percent.html(Math.floor(totalPercentage) + '%');
             });
         myDropzone.on("queuecomplete",
             function(file) {
