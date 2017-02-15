@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Fillager.Controllers
 {
     [Authorize]
+    //[Authorize(Policy = "ElevatedRights")] <-- this will add policy based authentication instead of just needing to be logged in.
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;

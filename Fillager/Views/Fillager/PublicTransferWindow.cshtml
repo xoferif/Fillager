@@ -109,12 +109,10 @@
 
         var bar = $('.bar');
         var percent = $('.percent');
-        var status = $('#status');
 
 
         $('#js-upload-form').ajaxForm({
             beforeSend: function() {
-                status.empty();
                 var percentVal = '0%';
                 bar.width(percentVal);
                 percent.html(percentVal);
