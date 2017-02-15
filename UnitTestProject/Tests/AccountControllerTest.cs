@@ -4,16 +4,11 @@ using System.Linq;
 using Fillager.Controllers;
 using Fillager.Models.Account;
 using Fillager.ViewModels;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
-using Xunit.Sdk;
-using System.Threading.Tasks;
-using System.Threading;
+using Microsoft.AspNetCore.Http;
 
 namespace FillagerTests.Tests
 {
@@ -22,35 +17,33 @@ namespace FillagerTests.Tests
     [Fact]
     public void ReturnRegisterView()
     {
-      // Arrange
-      var dummyUser = new ApplicationUser { UserName = "ed", Email = "testc@test.dk", StorageUsed = 0 };
-      var cancelToken = new CancellationTokenSource();
-      var mockIuserStore = new Mock<IUserStore<ApplicationUser>>();
-      mockIuserStore.Setup(x => x.UpdateAsync(dummyUser, cancelToken.Token))
-                .Returns(Task.FromResult(IdentityResult.Success));
-      var mockIOptions = new Mock<IOptions<IdentityOptions>>();
-      var mockIPasswordHasher = new Mock<IPasswordHasher<ApplicationUser>>();
-      var mockIUserValidator = new Mock<IEnumerable<IUserValidator<ApplicationUser>>>();
-      var mockIPassValidator = new Mock<IEnumerable<IPasswordValidator<ApplicationUser>>>();
-      var mockILookupNormalizer = new Mock<ILookupNormalizer>();
-      var mockIdentityErrorDescriber = new Mock<IdentityErrorDescriber>();
-      var mockIServiceProvider = new Mock<IServiceProvider>();
-      var mockILogger = new Mock<ILogger<UserManager<ApplicationUser>>>();
 
-      var mockSigninManager = new Mock<SignInManager<ApplicationUser>>();
-      var mockRoleManager = new Mock<RoleManager<UserRole>>();
-      //mockRoleManager.Setup(x => x.GetClaimsAsync(new UserRole { Name = "admin"  })).Returns(Task.)
-      var userManager = new UserManager<ApplicationUser>(mockIuserStore.Object, mockIOptions.Object, mockIPasswordHasher.Object, mockIUserValidator.Object, mockIPassValidator.Object, mockILookupNormalizer.Object, mockIdentityErrorDescriber.Object, mockIServiceProvider.Object, mockILogger.Object);
-      AccountController controller = new AccountController(userManager, mockSigninManager.Object, mockRoleManager.Object);
+      // Arrange
+      var mockIuserStore = new Mock<IUserStore<ApplicationUser>>().Object;
+      var userManager = new Mock<UserManager<ApplicationUser>>(mockIuserStore,
+          null, null, null, null, null, null, null, null).Object;
+      var context = new Mock<HttpContext>();
+      var signinManager = new Mock<SignInManager<ApplicationUser>>(userManager,
+          new HttpContextAccessor { HttpContext = context.Object },
+          new Mock<IUserClaimsPrincipalFactory<ApplicationUser>>().Object,
+          null, null)
+      { CallBase = true }.Object;
+
+      var roleManager = new Mock<RoleManager<UserRole>>(new Mock<IRoleStore<UserRole>>().Object,
+          null,
+          new Mock<ILookupNormalizer>().Object,
+          null, null, 
+          new HttpContextAccessor { HttpContext = context.Object })
+          { CallBase = true }.Object;
+      AccountController controller = new AccountController(userManager, signinManager, roleManager);
 
       // Act
-      //Task<IdentityResult> tt = (Task<IdentityResult>)mockIuserStore.Object.CreateAsync(dummyUser);
       var result = controller.Register();
 
       // Assert
       var viewResult = Assert.IsType<ViewResult>(result);
       var model = Assert.IsAssignableFrom<IEnumerable<RegisterViewModel>>(viewResult.ViewData.Model);
-      Assert.Equal(1,model.Count());
+      Assert.Equal(0,model.Count());
     }
 
     public void ReturnLoginView()
@@ -59,6 +52,27 @@ namespace FillagerTests.Tests
 
     public void ReturnLogOffView()
     {
+    }
+    private static Mock<SignInManager<TUser>> MockSignInManager<TUser>() where TUser : class
+    {
+      var context = new Mock<HttpContext>();
+      var manager = MockUserManager<TUser>();
+      return new Mock<SignInManager<TUser>>(manager.Object,
+          new HttpContextAccessor { HttpContext = context.Object },
+          new Mock<IUserClaimsPrincipalFactory<TUser>>().Object,
+          null, null)
+      { CallBase = true };
+    }
+    private static Mock<UserManager<TUser>> MockUserManager<TUser>() where TUser : class
+    {
+      IList<IUserValidator<TUser>> UserValidators = new List<IUserValidator<TUser>>();
+      IList<IPasswordValidator<TUser>> PasswordValidators = new List<IPasswordValidator<TUser>>();
+
+      var store = new Mock<IUserStore<TUser>>();
+      UserValidators.Add(new UserValidator<TUser>());
+      PasswordValidators.Add(new PasswordValidator<TUser>());
+      var mgr = new Mock<UserManager<TUser>>(store.Object, null, null, UserValidators, PasswordValidators, null, null, null, null, null);
+      return mgr;
     }
   }
 }
