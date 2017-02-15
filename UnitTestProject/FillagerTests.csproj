@@ -7,12 +7,12 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0-preview-20170210-02" />
-    <PackageReference Include="Moq" Version="4.6.38-alpha" />
+    <PackageReference Include="Moq" Version="4.6.36-alpha" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.1.10-rc2" />
     <PackageReference Include="MSTest.TestFramework" Version="1.0.8-rc2" />
     <PackageReference Include="xunit" Version="2.2.0-rc2-build3523" />
     <PackageReference Include="xunit.runner.console" Version="2.2.0-rc2-build3523" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.1.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0-rc2-build1249" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.0-msbuild3-final" />
