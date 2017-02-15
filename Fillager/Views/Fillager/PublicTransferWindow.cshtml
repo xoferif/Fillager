@@ -23,8 +23,10 @@
             <div class="panel-group">
                 @await Component.InvokeAsync("FileUploadZone", "UploadPublicFiles")
                 <div class="progress">
-                    <div class="bar progress-bar progress-bar-info"></div>
-                    <div class="percent">0%</div>
+
+                    <div class="bar progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                        <div class="percent">0%</div>
+                    </div>                   
                 </div>
             </div>
         </div>
@@ -60,7 +62,7 @@
     </div>
 </div>
 
-
+<!--hover effect-->
 <style>
     .hoverable:hover { background-color: #ecf0f1; }
 
@@ -73,6 +75,8 @@
         margin-left: 10px;
     }
 </style>
+
+<!--copy link from list-->
 @section Scripts
 {
     <script src="https://cdn.jsdelivr.net/clipboard.js/1.5.16/clipboard.min.js"></script>
@@ -80,6 +84,7 @@
         new Clipboard('.copyBtn');
     </script>
 
+    <!--on modal close clear the data in it to prevent caching its content-->
     <script>
         $(function() {
             // when the modal is closed
@@ -92,69 +97,49 @@
                 });
         });
     </script>
-    <script src="http://malsup.github.com/jquery.form.js"></script>
-    <script>
-        var bar = $('.bar');
-        var percent = $('.percent');
-        var status = $('#status');
 
-        $('#js-upload-form').ajaxForm({
-            beforeSend: function() {
-                status.empty();
-                var percentVal = '0%';
-                bar.width(percentVal);
-                percent.html(percentVal);
-            },
-            uploadProgress: function(event, position, total, percentComplete) {
-                var percentVal = percentComplete + '%';
-                bar.width(percentVal);
-                percent.html(percentVal);
-            },
-            success: function() {
-                var percentVal = '100%';
-                bar.width(percentVal);
-                percent.html(percentVal);
-            },
-            complete: function(xhr) {
-                status.html(xhr.responseText);
+    <!--simple dropzone with progress bar-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.css"/>
+    <script>
+        var dropZone = document.getElementById('drop-zone');
+        var uploadForm = document.getElementById('js-upload-form');
+        var __RequestVerificationToken = uploadForm.elements["__RequestVerificationToken"].value;
+
+        var myDropzone = new Dropzone("#drop-zone",
+        {
+            url: uploadForm.action,
+            maxFilesize: 250,
+            addRemoveLinks: true,
+            paramName: 'files',
+            previewTemplate: '<div></div>',
+            addRemoveLinks: false
+        });
+
+        myDropzone.on('sending',
+            function(file, xhr, formData) {
+                formData.append("__RequestVerificationToken", __RequestVerificationToken);
             }
-        });
+        );
+
+        myDropzone.on("totaluploadprogress",
+            function(totalPercentage, totalBytesToBeSent, totalBytesSent) {
+                var bar = $('.bar');
+                var percent = $('.percent');
+                var percentVal = totalPercentage + '%';
+                bar.width(percentVal);
+                percent.html(Math.floor(totalPercentage)+ '%');
+            });
+        myDropzone.on("queuecomplete",
+            function(file) {
+                $('.bar').width(0);
+                location.reload();
+            });
+
+
     </script>
-    <script>
-        $(function() {
 
-            // UPLOAD CLASS DEFINITION
-            // ======================
-
-            var dropZone = document.getElementById('drop-zone');
-            var uploadForm = document.getElementById('js-upload-form');
-            var $form = $('js-upload-form');
-
-            var startUpload = function(files) {
-                document.getElementById('js-upload-files').files = files; //works for all except firefox and IE / edge
-                uploadForm.submit();
-            };
-            uploadForm.addEventListener('submit',
-                function(e) {
-                    var uploadFiles = document.getElementById('js-upload-files').files;
-                    startUpload(uploadFiles);
-                });
-            dropZone.ondrop = function(e) {
-                e.preventDefault();
-                this.className = 'upload-drop-zone';
-
-                startUpload(e.dataTransfer.files);
-            };
-            dropZone.ondragover = function() {
-                this.className = 'upload-drop-zone drop';
-                return false;
-            };
-            dropZone.ondragleave = function() {
-                this.className = 'upload-drop-zone';
-                return false;
-            };
-        });
-    </script>
+    <!--multi download support-->
     <script>
         $("#checkAll").click(function() {
             $(".check").prop('checked', $(this).prop('checked'));
