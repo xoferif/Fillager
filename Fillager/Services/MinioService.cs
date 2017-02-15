@@ -7,14 +7,25 @@ using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Util;
+using Microsoft.Extensions.Configuration;
 
 namespace Fillager.Services
 {
     public class MinioService : IMinioService
     {
-        private const string MinioUrl = "http://minio:9000"; //= "http://192.168.1.20:9000/";//todo env var from docker
-        private const string AccessKey = "6b4535c9d0545e036d5b"; //todo env var from docker
-        private const string SecretAccessKey = "f50a73124f5699570beb9ad44cd941"; //todo env var from docker
+        private readonly string _minioUrl; //= "http://192.168.1.20:9000/";//todo env var from docker
+        private readonly string _accessKey; //todo env var from docker
+        private readonly string _secretAccessKey; //todo env var from docker
+
+        public MinioService(IConfiguration configuration)
+        {
+            var hostname = configuration.GetValue<string>("MINIO_NAME");
+            var port = configuration.GetValue<string>("MINIO_PORT");
+            _minioUrl = $"http://{hostname}:{port}";
+            _accessKey = configuration.GetValue<string>("MINIO_ACCESS_KEY");
+            _secretAccessKey = configuration.GetValue<string>("MINIO_SECRET_KEY");
+        }
+
 
         /// <summary>
         ///     Uploads a stream to minio
@@ -56,16 +67,16 @@ namespace Fillager.Services
         }
 
 
-        private static AmazonS3Client GetClient()
+        private AmazonS3Client GetClient()
         {
-            AWSCredentials creds = new BasicAWSCredentials(AccessKey, SecretAccessKey);
+            AWSCredentials creds = new BasicAWSCredentials(_accessKey, _secretAccessKey);
 
             var config = new AmazonS3Config
             {
                 RegionEndpoint = RegionEndpoint.EUWest1,
                 SignatureVersion = "v4",
                 ForcePathStyle = true, //required for minio
-                ServiceURL = MinioUrl
+                ServiceURL = _minioUrl
             };
 
             var client = new AmazonS3Client(creds, config);

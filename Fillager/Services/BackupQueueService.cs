@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using RabbitMQ.Client;
 
 namespace Fillager.Services
@@ -14,14 +10,16 @@ namespace Fillager.Services
     {
         private readonly IConnection _connection;
         private readonly IModel _channel;
+        private readonly string _queueName;
 
         public BackupQueueService(IConfiguration configuration)
         {
             var factory = new ConnectionFactory() { HostName = configuration.GetValue<string>("RABBITMQ_BACKUP_QUEUE")};
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
+            _queueName = configuration.GetValue<string>("RABBITMQ_BACKUP_QUEUE_NAME");
 
-            _channel.QueueDeclare(queue: "file_transfer_queue",//queue name
+            _channel.QueueDeclare(queue: _queueName,//queue name
                     durable: true,//keep msgs on disk in case rabbitmq crashes
                     exclusive: false,
                     autoDelete: false,
@@ -42,7 +40,7 @@ namespace Fillager.Services
 
 
             _channel.BasicPublish(exchange: "",
-                routingKey: "file_transfer_queue",
+                routingKey: _queueName,
                 basicProperties: properties,
                 body: body);
         }
