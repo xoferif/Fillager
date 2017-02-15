@@ -189,7 +189,7 @@ namespace Fillager.Controllers
 
                 file.CopyTo(memStream);
 
-                var id = await _minioService.UploadFile("testbucket", memStream);
+                var id = await _minioService.UploadFile("pocbucket", memStream);
 
                 await _db.Files.AddAsync(new File
                 {
@@ -202,7 +202,7 @@ namespace Fillager.Controllers
                 });
 
                 await _db.SaveChangesAsync();
-                _backupQueueService.SendBackupRequest("testbucket", id);
+                _backupQueueService.SendBackupRequest("pocbucket", id);
             }
         }
 
@@ -226,7 +226,7 @@ namespace Fillager.Controllers
                                    User.Identity.IsAuthenticated && user.Equals(file.OwnerGuid);
 
             if (amIAllowedToDownload)
-                return File(_minioService.DownloadFile("testbucket", id), "application/x-msdownload", file.FileName);
+                return File(_minioService.DownloadFile("pocbucket", id), "application/x-msdownload", file.FileName);
             return null; //TODO cannot return null from a FileResult........ 
         }
 
