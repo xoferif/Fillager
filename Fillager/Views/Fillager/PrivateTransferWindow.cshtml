@@ -88,10 +88,10 @@
 
     <!--on modal close clear the data in it to prevent caching its content-->
     <script>
-        $(function () {
+        $(function() {
             // when the modal is closed
             $('#modal-container').on('hidden.bs.modal',
-                function () {
+                function() {
                     // remove the bs.modal data attribute from it
                     $(this).removeData('bs.modal');
                     // and empty the modal-content element
@@ -103,7 +103,7 @@
     <!--simple dropzone with progress bar-->
     <script src="http://malsup.github.com/jquery.form.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/min/dropzone.min.css"/>
     <script>
         var dropZone = document.getElementById('drop-zone');
         var uploadForm = document.getElementById('js-upload-form');
@@ -115,44 +115,44 @@
 
 
         $('#js-upload-form').ajaxForm({
-            beforeSend: function () {
+            beforeSend: function() {
                 status.empty();
                 var percentVal = '0%';
                 bar.width(percentVal);
                 percent.html(percentVal);
             },
-            uploadProgress: function (event, position, total, percentComplete) {
+            uploadProgress: function(event, position, total, percentComplete) {
                 var percentVal = percentComplete + '%';
                 bar.width(percentVal);
                 percent.html(percentVal);
             },
-            success: function () {
+            success: function() {
                 var percentVal = '100%';
                 bar.width(percentVal);
                 percent.html(percentVal);
             },
-            complete: function (xhr) {
+            complete: function(xhr) {
                 location.reload();
             }
         });
 
         var myDropzone = new Dropzone("#drop-zone",
-            {
-                url: uploadForm.action,
-                maxFilesize: 250,
-                paramName: 'files',
-                previewTemplate: '<div></div>',
-                addRemoveLinks: false
-            });
+        {
+            url: uploadForm.action,
+            maxFilesize: 250,
+            paramName: 'files',
+            previewTemplate: '<div></div>',
+            addRemoveLinks: false
+        });
 
         myDropzone.on('sending',
-            function (file, xhr, formData) {
+            function(file, xhr, formData) {
                 formData.append("__RequestVerificationToken", __RequestVerificationToken);
             }
         );
 
         myDropzone.on("totaluploadprogress",
-            function (totalPercentage, totalBytesToBeSent, totalBytesSent) {
+            function(totalPercentage, totalBytesToBeSent, totalBytesSent) {
                 var bar = $('.bar');
                 var percent = $('.percent');
                 var percentVal = totalPercentage + '%';
@@ -160,7 +160,7 @@
                 percent.html(Math.floor(totalPercentage) + '%');
             });
         myDropzone.on("queuecomplete",
-            function (file) {
+            function(file) {
                 $('.bar').width(0);
                 location.reload();
             });
@@ -168,27 +168,26 @@
 
     </script>
 
-    <!--multi download support-->
+    <!--multi download select all checkbox-->
     <script>
-        $("#checkAll").click(function () {
+        $("#checkAll").click(function() {
             $(".check").prop('checked', $(this).prop('checked'));
         });
     </script>
+
+    <!--multi download feature-->
     <script>
-        $("#DownloadMultiple").click(function (e) {
+        $("#DownloadMultiple").click(function(e) {
             e.preventDefault();
             var someVar = $(".check:checked");
-            someVar.each(function (key, value) {
+
+            someVar.each(function(key, value) {
                 var fileId = value.value;
                 var fileAnchor = $("#file-dl-" + fileId);
-                setTimeout(
-                    function () {
-                        fileAnchor[0].click();
-                    },
-                    key * 1500
-                    //TODO: Create a proper Deferred / Promise function so as to ensure that all files get downloaded
-                );
+                if (fileAnchor != null && fileAnchor[0] != null) {
+                    fileAnchor[0].click();
+                }
             });
         });
     </script>
-}}
+})

@@ -166,27 +166,26 @@
 
     </script>
 
-    <!--multi download support-->
+    <!--multi download select all checkbox-->
     <script>
         $("#checkAll").click(function() {
             $(".check").prop('checked', $(this).prop('checked'));
         });
     </script>
+
+    <!--multi download feature-->
     <script>
         $("#DownloadMultiple").click(function(e) {
             e.preventDefault();
             var someVar = $(".check:checked");
+
             someVar.each(function(key, value) {
                 var fileId = value.value;
                 var fileAnchor = $("#file-dl-" + fileId);
-                setTimeout(
-                    function() {
-                        fileAnchor[0].click();
-                    },
-                    key * 1500
-                    //TODO: Create a proper Deferred / Promise function so as to ensure that all files get downloaded
-                );
+                if (fileAnchor != null && fileAnchor[0] != null) {
+                    fileAnchor[0].click();
+                }
             });
         });
     </script>
-}
+})
