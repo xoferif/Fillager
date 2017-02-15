@@ -9,7 +9,7 @@
 <form asp-action="Edit">
     <div class="form-horizontal">
         <h4>User</h4>
-        <hr />
+        <hr/>
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
             <label asp-for="UserName" class="col-md-2 control-label"></label>
@@ -21,21 +21,21 @@
         <div class="form-group">
             <label asp-for="Email" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Email" class="form-control" />
+                <input asp-for="Email" class="form-control"/>
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="PhoneNumber" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="PhoneNumber" class="form-control" />
+                <input asp-for="PhoneNumber" class="form-control"/>
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <div class="checkbox">
-                    <input asp-for="LockoutEnabled" />
+                    <input asp-for="LockoutEnabled"/>
                     <label asp-for="LockoutEnabled">Lockout</label>
                 </div>
             </div>
@@ -44,27 +44,27 @@
         <div class="form-group">
             <label asp-for="EarnedExtraStorage" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="EarnedExtraStorage" class="form-control" />
+                <input asp-for="EarnedExtraStorage" class="form-control"/>
                 <span asp-validation-for="EarnedExtraStorage" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="PayedExtraStorage" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="PayedExtraStorage" class="form-control" />
+                <input asp-for="PayedExtraStorage" class="form-control"/>
                 <span asp-validation-for="PayedExtraStorage" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="OtherStorageBonus" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="OtherStorageBonus" class="form-control" />
+                <input asp-for="OtherStorageBonus" class="form-control"/>
                 <span asp-validation-for="OtherStorageBonus" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-default"/>
             </div>
         </div>
     </div>
@@ -75,5 +75,5 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

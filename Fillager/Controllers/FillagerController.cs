@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Fillager.DataAccessLayer;
 using Fillager.Models.Account;
 using Fillager.Services;
@@ -20,13 +21,14 @@ namespace Fillager.Controllers
     {
         private const int DefaultStorage = 30 * 1024 * 1024; //Todo ENV var from docker
         private const int PublicStorageLimit = 250 * 1024 * 1024; //Todo ENNV var from docker
+        private readonly IBackupQueueService _backupQueueService;
         private readonly ApplicationDbContext _db;
         private readonly IMinioService _minioService;
-        private readonly IBackupQueueService _backupQueueService;
 
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public FillagerController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ApplicationDbContext db, IMinioService minioService, IBackupQueueService backupQueueService)
+        public FillagerController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
+            ApplicationDbContext db, IMinioService minioService, IBackupQueueService backupQueueService)
         {
             _userManager = userManager;
             _db = db;
@@ -53,7 +55,7 @@ namespace Fillager.Controllers
 
             var usedSpacePct = CalculateUsedPct(user.StorageUsed, DefaultStorage + user.StorageSpace);
 
-            var mappedFiles = AutoMapper.Mapper.Map<List<File>, List<FileViewModel>>(privateFiles);
+            var mappedFiles = Mapper.Map<List<File>, List<FileViewModel>>(privateFiles);
 
             var viewmodel = new FileListViewModel(mappedFiles)
             {
@@ -67,15 +69,16 @@ namespace Fillager.Controllers
             return View("PrivateTransferWindow", viewmodel);
         }
 
-        private static int CalculateUsedPct(double used, double max) => Convert.ToInt32((used / max) * 100);
+        private static int CalculateUsedPct(double used, double max) => Convert.ToInt32(used / max * 100);
 
         [HttpGet]
         public IActionResult PublicFileList()
         {
             var publicFiles = _db.Files.Where(file => file.IsPublic).Include(file => file.OwnerGuid).ToList();
-            var usedSpacePct = CalculateUsedPct(publicFiles.Where(file => file.OwnerGuid == null).Sum(file => file.Size), PublicStorageLimit);
+            var usedSpacePct = CalculateUsedPct(
+                publicFiles.Where(file => file.OwnerGuid == null).Sum(file => file.Size), PublicStorageLimit);
 
-            var mappedFiles = AutoMapper.Mapper.Map<List<File>, List<FileViewModel>>(publicFiles);
+            var mappedFiles = Mapper.Map<List<File>, List<FileViewModel>>(publicFiles);
 
             var viewmodel = new FileListViewModel(mappedFiles)
             {
@@ -97,9 +100,7 @@ namespace Fillager.Controllers
         {
             var sumOfFiles = files.Sum(file => file.Length);
             if (sumOfFiles > PublicStorageLimit)
-            {
                 return RedirectToAction("PublicFileList", "Fillager", new {error = "NotEnoughStorage"});
-            }
             var usedStorage = _db.Files.Where(file => file.OwnerGuid == null && file.IsPublic).Sum(file => file.Size);
             if (usedStorage + sumOfFiles >=
                 PublicStorageLimit)
@@ -148,11 +149,7 @@ namespace Fillager.Controllers
             var usedStorage = user.StorageUsed;
 
             if (usedStorage + sumOfFiles > allowedStorage)
-            {
                 return Json(new {error = "Not enough free storage"});
-                //return RedirectToAction("PrivateFileList", "Fillager", new { error = "NotEnoughStorage" });
-
-            }
 
 
             await UploadTask(files, false);
@@ -171,14 +168,13 @@ namespace Fillager.Controllers
 
 #pragma warning disable 4014
 
-            var sumOfAllFiles = user.Files.Sum(file => file.Size);//why is this broken?
+            var sumOfAllFiles = user.Files.Sum(file => file.Size); //why is this broken?
             sumOfAllFiles = _db.Files.Where(file => file.OwnerGuid == user).Sum(file => file.Size);
             if (sumOfAllFiles != user.StorageUsed)
             {
                 user.StorageUsed = sumOfAllFiles;
                 _db.Update(user);
                 _db.SaveChangesAsync(); //fire and forget this event
-
             }
 #pragma warning restore 4014
         }
@@ -303,7 +299,7 @@ namespace Fillager.Controllers
 
         public async Task<IActionResult> DeleteFiles(string[] checkbox)
         {
-            foreach (string fileId in checkbox)
+            foreach (var fileId in checkbox)
             {
                 var file = await _db.Files.FindAsync(fileId);
                 var user = await _userManager.GetUserAsync(User);

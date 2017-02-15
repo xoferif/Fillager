@@ -8,22 +8,22 @@ namespace Fillager.Services
 {
     public class BackupQueueService : IDisposable, IBackupQueueService
     {
-        private readonly IConnection _connection;
         private readonly IModel _channel;
+        private readonly IConnection _connection;
         private readonly string _queueName;
 
         public BackupQueueService(IConfiguration configuration)
         {
-            var factory = new ConnectionFactory() { HostName = configuration.GetValue<string>("RABBITMQ_BACKUP_QUEUE")};
+            var factory = new ConnectionFactory {HostName = configuration.GetValue<string>("RABBITMQ_BACKUP_QUEUE")};
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
             _queueName = configuration.GetValue<string>("RABBITMQ_BACKUP_QUEUE_NAME");
 
-            _channel.QueueDeclare(queue: _queueName,//queue name
-                    durable: true,//keep msgs on disk in case rabbitmq crashes
-                    exclusive: false,
-                    autoDelete: false,
-                    arguments: null);
+            _channel.QueueDeclare(_queueName, //queue name
+                true, //keep msgs on disk in case rabbitmq crashes
+                false,
+                false,
+                null);
 
             _channel.BasicQos(0, 1, false);
             //0 = unlimited max size per msg.
@@ -31,23 +31,9 @@ namespace Fillager.Services
             //false = only apply to this channel.
         }
 
-        private void PublishEvent(string msg)
-        {            
-            var body = Encoding.UTF8.GetBytes(msg);
-
-            var properties = _channel.CreateBasicProperties();
-            properties.Persistent = true; //make sure events don't get lost if rabbitmq restarts
-
-
-            _channel.BasicPublish(exchange: "",
-                routingKey: _queueName,
-                basicProperties: properties,
-                body: body);
-        }
-
         public void SendBackupRequest(string bucketName, string fileGuid)
         {
-            var msgObj = new FileRequestObject()
+            var msgObj = new FileRequestObject
             {
                 version = 1,
                 bucketname = bucketName,
@@ -61,6 +47,20 @@ namespace Fillager.Services
         {
             _connection?.Dispose();
             _channel?.Dispose();
+        }
+
+        private void PublishEvent(string msg)
+        {
+            var body = Encoding.UTF8.GetBytes(msg);
+
+            var properties = _channel.CreateBasicProperties();
+            properties.Persistent = true; //make sure events don't get lost if rabbitmq restarts
+
+
+            _channel.BasicPublish("",
+                _queueName,
+                properties,
+                body);
         }
 
         private class FileRequestObject

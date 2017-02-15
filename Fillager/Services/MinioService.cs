@@ -13,9 +13,9 @@ namespace Fillager.Services
 {
     public class MinioService : IMinioService
     {
-        private readonly string _minioUrl; //= "http://192.168.1.20:9000/";//todo env var from docker
-        private readonly string _accessKey; //todo env var from docker
-        private readonly string _secretAccessKey; //todo env var from docker
+        private readonly string _accessKey;
+        private readonly string _minioUrl; 
+        private readonly string _secretAccessKey;
 
         public MinioService(IConfiguration configuration)
         {

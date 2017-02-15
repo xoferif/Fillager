@@ -2,16 +2,16 @@
 
 <h4>Select files from your computer</h4>
 
-    <form asp-action=@ViewBag.UploadType
-          asp-controller="Fillager"
-          method="post"
-          enctype="multipart/form-data"
-          id="js-upload-form">
-        
-        <input type="file" name="files" id="js-upload-files" multiple />
-        <input type="submit" class="btn btn-sm btn-primary" value="Upload Selected Files" />
+<form asp-action="@ViewBag.UploadType"
+      asp-controller="Fillager"
+      method="post"
+      enctype="multipart/form-data"
+      id="js-upload-form">
 
-    </form>
+    <input type="file" name="files" id="js-upload-files" multiple/>
+    <input type="submit" class="btn btn-sm btn-primary" value="Upload Selected Files"/>
+
+</form>
 <!-- Drop Zone -->
 <h4>Or drag and drop files below</h4>
 <div class="upload-drop-zone" id="drop-zone">

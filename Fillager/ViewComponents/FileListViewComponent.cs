@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using Fillager.Models.Files;
-using Fillager.ViewModels;
+﻿using Fillager.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fillager.ViewComponents

@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Fillager.DataAccessLayer;
 using Fillager.Models.Account;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Fillager.Controllers
 {
@@ -16,7 +16,7 @@ namespace Fillager.Controllers
 
         public AdminController(ApplicationDbContext context)
         {
-            _context = context;    
+            _context = context;
         }
 
         public async Task<IActionResult> Users()
@@ -33,26 +33,21 @@ namespace Fillager.Controllers
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var applicationUser = await _context.Users.SingleOrDefaultAsync(m => m.Id == id);
             if (applicationUser == null)
-            {
                 return NotFound();
-            }
-            return View("EditUser",applicationUser);
+            return View("EditUser", applicationUser);
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("EarnedExtraStorage,PayedExtraStorage,OtherStorageBonus,UserName,Email,PhoneNumber,LockoutEnabled")] ApplicationUser applicationUser)
+        public async Task<IActionResult> Edit(string id,
+            [Bind("EarnedExtraStorage,PayedExtraStorage,OtherStorageBonus,UserName,Email,PhoneNumber,LockoutEnabled")] ApplicationUser applicationUser)
         {
             if (!_context.Users.Any(user => user.Id == id))
-            {
                 return NotFound();
-            }
 
             if (!ModelState.IsValid) return View(applicationUser);
 
@@ -75,9 +70,7 @@ namespace Fillager.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 if (!ApplicationUserExists(applicationUser.Id))
-                {
                     return NotFound();
-                }
                 throw;
             }
             return RedirectToAction("Users");

@@ -31,14 +31,11 @@ namespace Fillager
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)  
+        public void ConfigureServices(IServiceCollection services)
         {
             //add db connection
             services.AddDbContext<ApplicationDbContext>(
-                options =>
-                {
-                    options.UseMySQL(Configuration.GetValue<string>("SQL_CONNECTION_STRING"));
-                });
+                options => { options.UseMySQL(Configuration.GetValue<string>("SQL_CONNECTION_STRING")); });
 
             //add identity/authentication service
             services.AddIdentity<ApplicationUser, UserRole>(identityOptions =>
@@ -80,7 +77,6 @@ namespace Fillager
 
             services.AddScoped<MenuDataRepository>();
             services.AddScoped<AccountController>();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

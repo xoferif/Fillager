@@ -24,6 +24,6 @@ namespace Fillager.DataAccessLayer
 
         public DbSet<File> Files { get; set; }
 
-        public DbSet<Fillager.Models.Account.ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
     }
 }

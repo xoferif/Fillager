@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Fillager.Models.Account;
+﻿using AutoMapper;
 using Fillager.Models.Files;
 using Fillager.ViewModels;
 
@@ -13,7 +8,7 @@ namespace Fillager
     {
         public static void RegisterMaps()
         {
-            AutoMapper.Mapper.Initialize(config =>
+            Mapper.Initialize(config =>
             {
                 config.CreateMap<File, FileViewModel>();
                 //config.CreateMap<ApplicationUser, ApplicationUserViewModel>();

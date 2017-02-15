@@ -41,8 +41,8 @@ namespace Fillager.TagHelpers
             var currentAction = routeData["action"];
 
             var subMenus =
-                    _navigationMenu.GetMenu(true, MenuType, true).Result.MenuItems.Where(m => m.ParentId == MenuId).ToList();
-                //Hardcoded submenus to always show, might need to change this at a later date
+                _navigationMenu.GetMenu(true, MenuType, true).Result.MenuItems.Where(m => m.ParentId == MenuId).ToList();
+            //Hardcoded submenus to always show, might need to change this at a later date
 
             if (subMenus.Count > 0)
             {
