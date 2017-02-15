@@ -35,7 +35,10 @@ namespace Fillager
         {
             //add db connection
             services.AddDbContext<ApplicationDbContext>(
-                options => { options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")); });
+                options =>
+                {
+                    options.UseMySQL(Configuration.GetValue<string>("SQL_CONNECTION_STRING"));
+                });
 
             //add identity/authentication service
             services.AddIdentity<ApplicationUser, UserRole>(identityOptions =>
@@ -57,8 +60,8 @@ namespace Fillager
                 });
 
             //add redis identity key store for distributed identity support
-            var redisHost = Configuration.GetValue<string>("Redis:Host");
-            var redisPort = Configuration.GetValue<int>("Redis:Port");
+            var redisHost = Configuration.GetValue<string>("IDENTITY_REDIS_HOST");
+            var redisPort = Configuration.GetValue<int>("IDENTITY_REDIS_PORT");
             var redisIpAddress = Dns.GetHostEntryAsync(redisHost).Result.AddressList.Last();
             var redis = ConnectionMultiplexer.Connect($"{redisIpAddress}:{redisPort}");
 

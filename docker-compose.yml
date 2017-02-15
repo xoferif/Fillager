@@ -10,6 +10,9 @@ services:
       MINIO_SECRET_KEY : f50a73124f5699570beb9ad44cd941
       MINIO_NAME : minio
       MINIO_PORT : 9000
+      IDENTITY_REDIS_HOST : identity-redis
+      IDENTITY_REDIS_PORT : 6379
+      SQL_CONNECTION_STRING : Server=mariadb;Database=somedb;Uid=someuser;Pwd=very_secret;
 
     ports:
       - "80"
